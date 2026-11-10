@@ -1,39 +1,43 @@
 // Shared page chrome: <head>, header, menu overlay and footer. Rendered at build time for every page.
-import { BRAND, CONTACT, CTA, FOOTER, NAV, SOCIAL, TAGLINE, markSVG } from '../src/data.js';
+import { BRAND, CONTACT, CTA, FOOTER, NAV, SEO, SOCIAL, TAGLINE, markSVG } from '../src/data.js';
 
 export const esc = s => String(s).replace(/&(?!(?:[a-z]+|#\d+);)/gi, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 // Hover text-roll: two stacked copies of a label (see [data-t] in styles.css).
 export const roll = t => `<span data-t="${esc(t)}"><i>${esc(t)}</i><i aria-hidden="true">${esc(t)}</i></span>`;
 
 // Runs before first paint: chooses the layout, sets the frame scale, and notes an in-site page change.
-// Must stay in sync with the checks in main.js / page.js, which read window.__wantsLite.
-const BOOT = `(function(d,w){var r=d.documentElement,rm=matchMedia('(prefers-reduced-motion: reduce)');w.__wantsLite=function(){return rm.matches||!w.WebGLRenderingContext||innerWidth<1100||innerWidth/innerHeight<1.2};
+// main.js and page.js read the result from the <html> classes and window.__wantsLite.
+// 3D needs WebGL2 and a real graphics chip: on a software renderer it would crawl, so those get the flat layout.
+// That check creates a WebGL context, so its answer is kept for the rest of the visit.
+const BOOT = `(function(d,w){var r=d.documentElement,rm=matchMedia('(prefers-reduced-motion: reduce)'),hw=false,no3d=false;
+var k=null;try{k=sessionStorage.getItem('si-hw');no3d=!!sessionStorage.getItem('si-no3d')}catch(e){}
+if(k)hw=k==='1';else{try{var x=d.createElement('canvas').getContext('webgl2');if(x){var i=x.getExtension('WEBGL_debug_renderer_info');hw=!/swiftshader|llvmpipe|softpipe|software|basic render/i.test(i?x.getParameter(i.UNMASKED_RENDERER_WEBGL):'');var l=x.getExtension('WEBGL_lose_context');if(l)l.loseContext()}}catch(e){}
+try{sessionStorage.setItem('si-hw',hw?'1':'0')}catch(e){}}
+w.__wantsLite=function(){return rm.matches||!hw||no3d||innerWidth<1100||innerWidth/innerHeight<1.2};
 w.__vh=function(){var p=d.createElement('div');p.style.cssText='position:fixed;top:0;width:0;height:100lvh;visibility:hidden';r.appendChild(p);var h=p.offsetHeight;r.removeChild(p);return h||innerHeight};
 w.__frameVars=function(){var l=w.__wantsLite(),W=innerWidth,H=l?w.__vh():innerHeight,u=Math.min(W/(l?560:1920),H/868),s=r.style;s.setProperty('--u',u.toFixed(5));s.setProperty('--nu',l?'.78':Math.max(u,.62).toFixed(4));s.setProperty('--ox',((W-1920*u)/2).toFixed(2)+'px');s.setProperty('--oyc',((H-868*u)/2).toFixed(2)+'px');s.setProperty('--oyb',(H-868*u).toFixed(2)+'px')};
-var c=' js '+(w.__wantsLite()?'lite':'full'),no3d=false;try{no3d=!!sessionStorage.getItem('si-no3d');if(sessionStorage.getItem('si-wipe'))c+=' wiped';if(sessionStorage.getItem('si-seen'))c+=' seen'}catch(e){}if(w.WebGLRenderingContext&&!rm.matches&&!no3d)c+=' gl';r.className+=c;w.__frameVars()})(document,window)`;
+var c=' js '+(w.__wantsLite()?'lite':'full');try{if(sessionStorage.getItem('si-wipe'))c+=' wiped';if(sessionStorage.getItem('si-seen'))c+=' seen'}catch(e){}if(hw&&!rm.matches&&!no3d)c+=' gl';r.className+=c;w.__frameVars()})(document,window)`;
 
-export const head = ({ title, desc, path = '', styles = [] }) => `<meta charset="utf-8">
+export const SITE_URL = 'https://smartindia.digital/';
+
+export const head = ({ title, desc, path = '', index = true, styles = [] }) => `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
+${index ? `<link rel="canonical" href="${SITE_URL}${path}">` : '<meta name="robots" content="noindex">'}
 <meta name="google-site-verification" content="Xm2TRckxXp8vL-KfetKLU4Iz2xRRGbkHqQT7nrhVl5Q">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://smartindia.digital/${path}">
+<meta property="og:url" content="${SITE_URL}${path}">
 <meta name="theme-color" content="#040508">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="/node_modules/@fontsource/familjen-grotesk/files/familjen-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <script>${BOOT}</script>
 <link rel="stylesheet" href="/src/styles.css">
 ${styles.map(s => `<link rel="stylesheet" href="${s}">`).join('\n')}`;
 
-export const HOME_META = {
-  title: `${BRAND} – Creative Digital Agency in Tirupur`,
-  desc: `${BRAND} is a creative digital agency in Tirupur building mobile and web applications, websites and brand design that grow your business.`,
-};
+export const HOME_META = SEO.home;
 
 export const header = base => `<div id="wipe" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
 <header id="nav">
@@ -86,10 +90,10 @@ export const footer = base => `<footer id="footer" data-theme="dark">
 <div id="sbar" aria-hidden="true"><i id="sthumb"></i></div>`;
 
 // A complete inner page.
-export const shell = ({ base, title, desc, path, active, id, body }) => `<!doctype html>
+export const shell = ({ base, title, desc, path, index, active, id, body }) => `<!doctype html>
 <html lang="en">
 <head>
-${head({ title: `${title} – ${BRAND}`, desc: desc || TAGLINE, path, styles: ['/src/pages.css'] })}
+${head({ title: `${title} – ${BRAND}`, desc: desc || TAGLINE, path, index, styles: ['/src/pages.css'] })}
 </head>
 <body class="inner" data-page="${id}">
 <canvas id="gl" aria-hidden="true"></canvas>

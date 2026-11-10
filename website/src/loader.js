@@ -10,15 +10,16 @@ const LD_G = curve([[4.0, 214], [4.25, 170], [4.5, 68], [4.75, 4]]);
 export const LOADER_END = 5.05;
 const HOLD_AT = 3.85;   // the fully drawn mark, just before the box opens: the loader waits here until the page is ready
 
-// Intro clock. It advances with capped steps during the loader, so a busy main thread pauses the animation
-// instead of making it jump, and it holds before the reveal until `ready` is set.
+// Intro clock. It advances with capped steps, so a long pause on the main thread holds the animation instead of making
+// it jump, while a phone drawing only 8 frames a second still plays it at full speed. It holds before the reveal until
+// `ready` is set.
 export function makeClock(start = 0) {
   const c = {
     T: start, ready: start >= LOADER_END, last: performance.now(),
     tick(now) {
       const raw = Math.max(0, now - c.last) / 1000;
       c.last = now;
-      c.T += Math.min(raw, c.T < LOADER_END ? .05 : .1);
+      c.T += Math.min(raw, .12);
       if (!c.ready) c.T = Math.min(c.T, HOLD_AT);
       return raw;
     },
@@ -49,7 +50,7 @@ export function makeLoader() {
       const w = T < 4.05 ? lerp(196, 260, grow) * k : lerp(260 * k, W, (LD_W(T) - 260) / 1660);
       const h = T < 4.05 ? w : lerp(260 * k, H, (LD_H(T) - 260) / 608);
       const cx = W / 2, cy = H / 2 + lerp(-34, 0, e2) * k;
-      S(box, 'left', `${cx - w / 2}px`); S(box, 'top', `${cy - h / 2}px`); S(box, 'width', `${w}px`); S(box, 'height', `${h}px`);
+      S(box, 'transform', `translate(${cx - w / 2}px,${cy - h / 2}px)`); S(box, 'width', `${w}px`); S(box, 'height', `${h}px`);
       frame.setAttribute('width', w); frame.setAttribute('height', h); faint.setAttribute('width', w); faint.setAttribute('height', h);
       S(faint, 'opacity', String(seg(T, 1.2, 1.6) * (1 - seg(T, 3.95, 4.1))));
       top.setAttribute('d', `M0 0 H${w}`); right.setAttribute('d', `M${w} 0 V${h}`); tick.setAttribute('d', `M0 ${h - 24 * k} V${h}`);
@@ -60,8 +61,8 @@ export function makeLoader() {
       const rot = 45 * (eio(seg(T, 2.4, 2.6)) - eio(seg(T, 3.4, 3.6)));
       [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sy], i) => {
         const off = lerp((i % 2 ? 86 : -86) * k, sx * (w / 2 + 14 * k), spread), oy = lerp((-3 + sy * 3) * k, sy * (h / 2 + 14 * k), spread);
-        S(xs[i], 'left', `${cx + off}px`); S(xs[i], 'top', `${cy + oy}px`);
-        S(xs[i], 'opacity', String(seg(T, .25, .5) * (1 - seg(T, 4.6, 4.9)))); S(xs[i], 'transform', `rotate(${rot}deg)`);
+        S(xs[i], 'transform', `translate(${cx + off}px,${cy + oy}px) rotate(${rot}deg)`);
+        S(xs[i], 'opacity', String(seg(T, .25, .5) * (1 - seg(T, 4.6, 4.9))));
       });
       // the mark: outline draws, then a striped glitch fill per piece, then it breaks apart as the box opens
       outl.forEach((p, i) => { p.setAttribute('stroke-dashoffset', 1 - eio(seg(T, 1.3 + i * .18, 2.0 + i * .18))); S(p, 'opacity', String(1 - seg(T, 2.9, 3.2))); });

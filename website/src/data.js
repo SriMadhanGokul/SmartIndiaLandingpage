@@ -27,6 +27,8 @@ export const CONTACT = {
   email: 'info@smartindia.ai', phone: '+91 99949 00470', tel: '+919994900470',
   city: 'Tirupur, Tamil Nadu, India', hours: 'Mon – Sat 8:00 – 6:30',
 };
+// Laravel enquiry route on the live site (contact form posts name, email, subject, phone, message).
+export const ENQUIRY_URL = '/contact/store';
 // The two main calls to action land directly on their forms.
 export const CTA = { discuss: 'contact/#discuss', call: 'book-a-call/#request' };
 export const NAV = [
@@ -56,9 +58,9 @@ export const ABOUT = {
 export const MARQUEE = ['DESIGN', 'DEVELOP', 'DELIVER'];
 export const LOADER_LABELS = ['Inspire', 'Innovate', 'Impact'];
 export const FACTS = [
-  { label: 'Satisfied clients', text: 'Clients returning to us<br>again and again.', value: 92, suffix: '%', img: 'about-1-1.jpg' },
+  { label: 'Satisfied clients', text: 'Clients returning to us<br>again and again.', value: 92, suffix: '%', img: 'about-1-1.webp' },
   { label: 'Happy customers', text: '4.8/5 average rating from<br>5k+ customer reviews.', value: 300, suffix: '+' },
-  { label: 'Years in digital service', text: 'Different skills.<br>One standard.', value: 15, suffix: '+', img: 'choose-us-1-1.jpg' },
+  { label: 'Years in digital service', text: 'Different skills.<br>One standard.', value: 15, suffix: '+', img: 'choose-us-1-1.webp' },
 ];
 export const CLIENTS = [
   ['FashionNova', 'font-family:Georgia,serif;font-style:italic;font-weight:700'],
@@ -68,8 +70,8 @@ export const CLIENTS = [
   ['Capterra ★ 4.8', 'font-weight:600'],
 ];
 export const SERVICES_WORDS = ['DESIGN', 'MOBILE & WEB', 'APPLICATION', 'DEVELOPMENT'];
-export const RIBBON = ['about-1-1.jpg', 'T:2026', 'project1-1.jpg', 'video-1-1.jpg', 'object.png', 'T:SMART®', 'choose-us-1-1.jpg', 'project1-3.jpg', 'aihero.jpeg', 'T:DESIGN', 'contact-1-1.jpg', 'object3.png',
-  'project1-2.jpg', 'news-1-1.jpg', 'object2.png', 'about-1-2.jpg', 'T:APPS', 'service-bg-1-1.jpg', 'T:CONVERT', 'team-bg-1-1.jpg', 'T:TIRUPUR', 'choose-us-1-1.jpg', 'object2.png', 'contact-1-1.jpg'];
+export const RIBBON = ['about-1-1.webp', 'T:2026', 'project1-1.webp', 'video-1-1.webp', 'object.webp', 'T:SMART®', 'choose-us-1-1.webp', 'project1-3.webp', 'aihero.webp', 'T:DESIGN', 'contact-1-1.webp', 'object3.webp',
+  'project1-2.webp', 'news-1-1.webp', 'object2.webp', 'about-1-2.webp', 'T:APPS', 'service-bg-1-1.webp', 'T:CONVERT', 'team-bg-1-1.webp', 'T:TIRUPUR', 'choose-us-1-1.webp', 'object2.webp', 'contact-1-1.webp'];
 export const FOOTER = {
   kicker: 'Let’s build what inspires.',
   heading: 'Ready to build something bold?',
@@ -141,13 +143,13 @@ export const SERVICES = [
 // The six web projects, clients, durations and links come from the client's portfolio. Their one-line descriptions
 // are written from each client site's own title. The mobile project comes from Rajesh Kumar's testimonial.
 export const PROJECTS = [
-  { slug: 'svs-future-power', name: 'SVS Future Power', client: 'Selvaraj Vinoth', duration: '2 days', platform: 'Dynamic Website', group: 'web', url: 'https://svsfuturepower.in/', img: 'projects/svs-future-power.jpg', logo: 'logos/svs-future-power.jpg', overlay: 'Go solar.', text: 'A dynamic website for a solar energy company.' },
+  { slug: 'svs-future-power', name: 'SVS Future Power', client: 'Selvaraj Vinoth', duration: '2 days', platform: 'Dynamic Website', group: 'web', url: 'https://svsfuturepower.in/', img: 'projects/svs-future-power.webp', logo: 'logos/svs-future-power.webp', overlay: 'Go solar.', text: 'A dynamic website for a solar energy company.' },
   { slug: 'paakhi-jewels', name: 'Paakhi Jewels', client: 'Bhavik Vyas', duration: '4 days', platform: 'E-Commerce', group: 'web', url: 'https://paakhijewels.com/', overlay: 'Paakhi Jewels.', text: 'An e-commerce store for a jewellery brand.' },
-  { slug: 'tara-naturals', name: 'Tara Naturals', client: 'Arunkumar', duration: '2 days', platform: 'Dynamic Website', group: 'web', url: 'https://taranaturals.in/', img: 'projects/tara-naturals.jpg', logo: 'logos/tara-naturals.jpg', text: 'A dynamic website for a premium cosmetics brand.' },
-  { slug: 'theera-books', name: 'Theera Books', client: 'Jayaganesh', duration: '4 days', platform: 'E-Commerce', group: 'web', url: 'https://theerabooks.com/', img: 'projects/theera-books.jpg', logo: 'logos/theera-books.jpg', overlay: 'Shop smarter.', text: 'An e-commerce store for an online bookstore.' },
-  { slug: 'tejaswini-kerala-ayurvedam', name: 'Tejaswini Kerala Ayurvedam', client: 'Deepam Batta', duration: '4 days', platform: 'E-Commerce', group: 'web', url: 'https://tejasviniayurveda.com/', img: 'projects/tejaswini-kerala-ayurvedam.jpg', logo: 'logos/tejaswini-kerala-ayurvedam.jpg', overlay: 'Natural care.', text: 'An e-commerce store for an Ayurveda health care centre.' },
-  { slug: 'upgrade-educational-consultancy', name: 'Upgrade Educational Consultancy', client: 'Mansii', duration: '2 days', platform: 'Dynamic Website', group: 'web', url: 'https://upgradeeducationalconsultancy.in/', img: 'projects/upgrade-educational-consultancy.jpg', logo: 'logos/upgrade-educational-consultancy.jpg', overlay: 'Learn anywhere.', text: 'A dynamic website for a distance and offline education partner.' },
-  { slug: 'techsolutions-mobile-app', name: 'TechSolutions Mobile App', client: 'TechSolutions', platform: 'Mobile Application', group: 'mobile', img: 'project1-3.jpg', overlay: 'Mobile first.', text: 'A seamless, user-friendly mobile app that earned amazing feedback from its customers.', quoteOf: 'Rajesh Kumar' },
+  { slug: 'tara-naturals', name: 'Tara Naturals', client: 'Arunkumar', duration: '2 days', platform: 'Dynamic Website', group: 'web', url: 'https://taranaturals.in/', img: 'projects/tara-naturals.webp', logo: 'logos/tara-naturals.webp', text: 'A dynamic website for a premium cosmetics brand.' },
+  { slug: 'theera-books', name: 'Theera Books', client: 'Jayaganesh', duration: '4 days', platform: 'E-Commerce', group: 'web', url: 'https://theerabooks.com/', img: 'projects/theera-books.webp', logo: 'logos/theera-books.webp', overlay: 'Shop smarter.', text: 'An e-commerce store for an online bookstore.' },
+  { slug: 'tejaswini-kerala-ayurvedam', name: 'Tejaswini Kerala Ayurvedam', client: 'Deepam Batta', duration: '4 days', platform: 'E-Commerce', group: 'web', url: 'https://tejasviniayurveda.com/', img: 'projects/tejaswini-kerala-ayurvedam.webp', logo: 'logos/tejaswini-kerala-ayurvedam.webp', overlay: 'Natural care.', text: 'An e-commerce store for an Ayurveda health care centre.' },
+  { slug: 'upgrade-educational-consultancy', name: 'Upgrade Educational Consultancy', client: 'Mansii', duration: '2 days', platform: 'Dynamic Website', group: 'web', url: 'https://upgradeeducationalconsultancy.in/', img: 'projects/upgrade-educational-consultancy.webp', logo: 'logos/upgrade-educational-consultancy.webp', overlay: 'Learn anywhere.', text: 'A dynamic website for a distance and offline education partner.' },
+  { slug: 'techsolutions-mobile-app', name: 'TechSolutions Mobile App', client: 'TechSolutions', platform: 'Mobile Application', group: 'mobile', img: 'project1-3.webp', overlay: 'Mobile first.', text: 'A seamless, user-friendly mobile app that earned amazing feedback from its customers.', quoteOf: 'Rajesh Kumar' },
 ];
 export const HOME_WORK = ['theera-books', 'svs-future-power', 'techsolutions-mobile-app'];
 
@@ -156,7 +158,7 @@ export const TEAM = [
   ['Tamil Maniyammai A.M', 'CEO & Founder'], ['Sangeeth Kumar', 'CEO & Founder'], ['Veena Virwani', 'Human Resources'],
   ['Raki', 'Sales Manager'], ['Vegi Kumar', 'Lead Developer'],
 ];
-// Testimonials from the client's site, in the clients' own words. Avatars show initials; add `photo: 'file.jpg'`
+// Testimonials from the client's site, in the clients' own words. Avatars show initials; add `photo: 'file.webp'`
 // (in public/media) once the client supplies a real photo of that person.
 export const TESTIMONIALS = [
   { client: 'FashionNova', name: 'Sarah Johnson', role: 'CEO, FashionNova', quote: 'SMARTINDIA.DIGITAL transformed our online presence completely. Our sales increased by 40% within the first three months of launching the new website.' },
@@ -197,7 +199,8 @@ export const BLOG = [
   {
     slug: 'future-of-mobile-and-web-application-development',
     title: 'The Future of Mobile and Web Application Development',
-    date: '25 Apr', author: 'Admin', category: 'Digital Agency', img: 'news-1-1.jpg',
+    seoTitle: 'The Future of Mobile & Web Applications',
+    date: '25 Apr', author: 'Admin', category: 'Digital Agency', img: 'news-1-1.webp',
     excerpt: 'Mobile and web application development is evolving rapidly with AI and personalized experiences leading the way.',
     body: [
       ['p', 'Mobile and web application development is evolving rapidly with AI and personalized experiences leading the way.'],
@@ -210,3 +213,30 @@ export const BLOG = [
     ],
   },
 ];
+
+/* ---------- search listings ----------
+   Titles: the brand is added after them on inner pages, so keep them to 39 characters (60 with the brand).
+   Descriptions: keep them to 160 characters, with the words people search for near the start. */
+export const SEO = {
+  home: {
+    title: `${BRAND} – Web & Mobile Application Studio`,
+    desc: `${BRAND} designs and builds web applications and mobile applications from Tirupur. Compare packages, what is included, and send a project enquiry.`,
+  },
+  'about/': { title: 'About Our Digital Agency in Tirupur', desc: `${BRAND} is a creative digital agency in Tirupur. We design and build mobile apps, web applications and websites that help businesses grow.` },
+  'services/': { title: 'Web & Mobile App Development Services', desc: `Mobile app development, web application development, website development and graphic designing services in Tirupur from ${BRAND}.` },
+  'projects/': { title: 'Web & App Development Projects', desc: `See the websites, online stores and mobile apps ${BRAND} has built for clients: web and mobile app development from our Tirupur studio.` },
+  'team/': { title: 'Our Team of Developers & Designers', desc: `Meet the team at ${BRAND}, the Tirupur digital agency behind custom mobile apps, web applications and websites.` },
+  'pricing/': { title: 'Web & App Development Pricing', desc: `Web and mobile app development pricing from ${BRAND} in Tirupur: project-based quotes, monthly retainers, and support and maintenance plans.` },
+  'testimonials/': { title: 'Client Testimonials', desc: `Read what clients say about working with ${BRAND}, a Tirupur digital agency for website, web application and mobile app development.` },
+  'faq/': { title: 'Web & App Development FAQs', desc: `Answers to common questions about web and mobile app development at ${BRAND}: our services, process, pricing and ongoing support.` },
+  'blogs/': { title: 'Web & Mobile App Development News', desc: `News and ideas from the ${BRAND} team on web application development, mobile app development and building digital products.` },
+  'book-a-call/': { title: 'Book a Free Project Call', desc: `Book a free call with ${BRAND} about your website, web application or mobile app project. Call ${CONTACT.phone} or choose a time.` },
+  'contact/': { title: 'Contact Our Tirupur Digital Agency', desc: `Contact ${BRAND}, a web and mobile app development company in Tirupur. Call ${CONTACT.phone} or email ${CONTACT.email}.` },
+  services: {
+    'app-development': { title: 'Mobile App Development in Tirupur', desc: `Mobile app development in Tirupur: ${BRAND} builds intuitive iOS and Android applications with seamless user journeys for your business.` },
+    'web-application-development': { title: 'Web Application Development in Tirupur', desc: `Custom web application development in Tirupur: scalable web apps built from scratch with modern technologies like Laravel and React.` },
+    'web-development': { title: 'Website Development in Tirupur', desc: `Website development in Tirupur: custom, responsive, high-performance websites tailored to your business, designed and built by ${BRAND}.` },
+    'graphic-designing': { title: 'Graphic Designing in Tirupur', desc: `Graphic designing in Tirupur: logos, posters and visual identities that capture your brand’s essence, created by the ${BRAND} team.` },
+  },
+  project: p => ({ title: `${p.name} Project`, desc: `${p.text} Built by ${BRAND}, a web and mobile app company in Tirupur.` }),
+};

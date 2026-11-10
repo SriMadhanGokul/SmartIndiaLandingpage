@@ -82,3 +82,15 @@ export function pathParam(x, y, path) {
   }
   return bestS / total;
 }
+
+// Heavy set-up is written as generators that yield often: run one straight through, or a little per frame so the
+// page never blocks.
+export const runSync = gen => { let r = gen.next(); while (!r.done) r = gen.next(); return r.value; };
+export async function runSliced(gen, budget = 7) {
+  let t = performance.now(), r = gen.next();
+  while (!r.done) {
+    if (performance.now() - t > budget) { await new Promise(requestAnimationFrame); t = performance.now(); }
+    r = gen.next();
+  }
+  return r.value;
+}

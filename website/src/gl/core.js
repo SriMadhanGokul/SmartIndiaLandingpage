@@ -15,6 +15,7 @@ export const canvas = document.getElementById('gl');
 export const renderer = new THREE.WebGLRenderer({ canvas, antialias: !lite, powerPreference: 'high-performance' });
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.debug.checkShaderErrors = !!import.meta.env.DEV;   // reading the logs would wait for each shader to finish
 
 export const camera = new THREE.PerspectiveCamera(30, 1, .1, 200);
 camera.position.set(0, 0, 14);
@@ -88,7 +89,7 @@ export function governor(now) {
   applySize();
   slowSince = 0; ema = 24;
 }
-function giveUp3D() {
+export function giveUp3D() {
   try { sessionStorage.setItem('si-no3d', '1'); location.reload(); } catch { /* the choice can't be remembered, so don't reload forever */ }
 }
 // A lost context is often just a backgrounded tab, and three.js restores it. Fall back only if it stays lost in view.
@@ -116,6 +117,23 @@ blit.add(backdrop(`uniform sampler2D uT;void main(){gl_FragColor=vec4(texture2D(
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
   }`, { uT: { value: sceneRT.texture } }));
+
+// Compiles shaders without holding up the page. A scene drawn into the capture target needs its own variant of each
+// shader (no tone mapping), and asking for it here saves compiling it mid-draw.
+export function compileScenes({ screen = [], captured = [] }) {
+  const job = s => renderer.compileAsync(s, camera).catch(() => {});
+  const jobs = [blit, ...screen].map(job);
+  renderer.setRenderTarget(sceneRT);
+  jobs.push(...captured.map(job));
+  renderer.setRenderTarget(null);
+  return Promise.all(jobs);
+}
+// Sends textures to the GPU one per frame, so the first draw of a scene doesn't stall.
+export async function uploadTextures(scenes, extra = []) {
+  const all = new Set(extra);
+  for (const s of scenes) s.traverse(o => { if (o.material?.map) all.add(o.material.map); if (o.material?.bumpMap) all.add(o.material.bumpMap); });
+  for (const t of all) { renderer.initTexture(t); await new Promise(requestAnimationFrame); }
+}
 
 // Render `scene` into the capture target and to the screen, then draw overlay scenes on top.
 export function renderLayers(scene, overlays = []) {

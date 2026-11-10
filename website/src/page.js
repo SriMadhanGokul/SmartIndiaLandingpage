@@ -8,9 +8,7 @@ import { markArt } from './mark.js';
 import { $, $$, S } from './ui.js';
 
 const root = document.documentElement;
-const webgl = (() => { try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; } })();
-if (!webgl) { root.classList.remove('gl'); root.classList.replace('full', 'lite'); }
-const lite = root.classList.contains('lite'), gl = root.classList.contains('gl');
+const lite = root.classList.contains('lite'), gl = root.classList.contains('gl');   // chosen by the head script
 try { sessionStorage.setItem('si-seen', '1'); } catch { /* private mode */ }
 
 const lenis = new Lenis({ lerp: .1, smoothWheel: true, syncTouch: false });
@@ -176,5 +174,5 @@ let rt = 0;
 addEventListener('resize', () => {
   window.__frameVars();
   clearTimeout(rt);
-  rt = setTimeout(() => { if (window.__wantsLite() !== lite && webgl) location.reload(); }, 400);
+  rt = setTimeout(() => { if (window.__wantsLite() !== lite) location.reload(); }, 400);
 });

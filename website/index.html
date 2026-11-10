@@ -2,129 +2,447 @@
 <html lang="en">
 <head>
 <!--site:head-->
+<link rel="stylesheet" href="/src/pages.css">
+<link rel="stylesheet" href="/src/landing.css">
 </head>
-<body data-page="home">
-<canvas id="gl" aria-hidden="true"></canvas>
+<body class="inner land" data-page="home">
+<a class="skip" href="#web">Skip to content</a>
 
-<!-- ============ LOADER ============ -->
-<div id="loader" aria-hidden="true">
-  <div id="ldBox">
-    <div id="ldFill"></div>
-    <svg id="ldFrame"><rect id="ldFaint" x="0" y="0" fill="none" stroke="rgba(0,0,0,.14)" stroke-width="1"/>
-      <path id="ldTop" fill="none" stroke="#333" stroke-width="1.6" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
-      <path id="ldRight" fill="none" stroke="#333" stroke-width="1.6" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
-      <path id="ldTick" fill="none" stroke="#333" stroke-width="1.6" opacity="0"/></svg>
-    <div id="ldMark"></div>
+<header id="nav">
+  <a id="navLogo" href="~/#top" aria-label="SMARTINDIA.DIGITAL home"><span id="navMark" style="display:flex"></span><span>SMARTINDIA</span></a>
+  <nav id="landLinks" aria-label="On this page">
+    <a href="~/#web">Web</a>
+    <a href="~/#mobile">Mobile</a>
+    <a href="~/#pricing">Pricing</a>
+    <a href="~/#why">Why us</a>
+    <a href="~/#process">Process</a>
+    <a href="~/#enquire">Enquire</a>
+  </nav>
+  <div id="navRight">
+    <button id="navSnd" type="button" aria-label="Play ambient sound" aria-pressed="false">
+      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 5h2.5L8 2v10L4.5 9H2z" fill="currentColor"/><path class="off" d="M10 4l3 6M13 4l-3 6" stroke="currentColor" stroke-width="1.1"/><path class="on" d="M10 4.5q2 2.5 0 5M11.5 3q3.4 4 0 8" stroke="currentColor" stroke-width="1.1" fill="none"/></svg>
+    </button>
+    <a id="navTalk" class="pill roll" href="~/#enquire"><span data-t="Let's talk"><i>Let's talk</i><i aria-hidden="true">Let's talk</i></span></a>
+    <button id="navMenu" class="pill roll" type="button" aria-expanded="false" aria-controls="menu"><span data-t="Menu" id="navMenuT"><i>Menu</i><i aria-hidden="true">Menu</i></span><i aria-hidden="true"></i></button>
   </div>
-  <div class="x" id="x0"></div><div class="x" id="x1"></div><div class="x" id="x2"></div><div class="x" id="x3"></div>
-  <div class="cap" id="ldLbl"></div>
-  <div id="ldNum">000</div>
+</header>
+
+<div id="menu" aria-hidden="true" role="dialog" aria-label="On this page">
+  <div class="slats"><i></i><i></i><i></i><i></i><i></i></div>
+  <nav aria-label="Sections"><ol id="menuLinks">
+    <li style="--i:0"><a class="roll" href="~/#top"><small>01</small><span data-t="Home"><i>Home</i><i aria-hidden="true">Home</i></span></a></li>
+    <li style="--i:1"><a class="roll" href="~/#web"><small>02</small><span data-t="Web apps"><i>Web apps</i><i aria-hidden="true">Web apps</i></span></a></li>
+    <li style="--i:2"><a class="roll" href="~/#mobile"><small>03</small><span data-t="Mobile apps"><i>Mobile apps</i><i aria-hidden="true">Mobile apps</i></span></a></li>
+    <li style="--i:3"><a class="roll" href="~/#pricing"><small>04</small><span data-t="Pricing"><i>Pricing</i><i aria-hidden="true">Pricing</i></span></a></li>
+    <li style="--i:4"><a class="roll" href="~/#why"><small>05</small><span data-t="Why us"><i>Why us</i><i aria-hidden="true">Why us</i></span></a></li>
+    <li style="--i:5"><a class="roll" href="~/#process"><small>06</small><span data-t="Process"><i>Process</i><i aria-hidden="true">Process</i></span></a></li>
+    <li style="--i:6"><a class="roll" href="~/#enquire"><small>07</small><span data-t="Enquire"><i>Enquire</i><i aria-hidden="true">Enquire</i></span></a></li>
+  </ol></nav>
+  <div id="menuSide">
+    <div class="cap dim">Business enquiry</div>
+    <a class="menuBig roll" href="mailto:info@smartindia.ai"><span data-t="info@smartindia.ai"><i>info@smartindia.ai</i><i aria-hidden="true">info@smartindia.ai</i></span></a>
+    <a class="menuBig roll" href="tel:+919994900470"><span data-t="+91 99949 00470"><i>+91 99949 00470</i><i aria-hidden="true">+91 99949 00470</i></span></a>
+    <div class="cap dim gapT">Studio</div>
+    <p class="p17">Tirupur, Tamil Nadu, India<br>Mon – Sat 8:00 – 6:30</p>
+  </div>
 </div>
 
-<!--site:header-->
-<!--site:menu-->
-
-<!-- ============ DESKTOP STAGE: one pinned viewport, scrubbed by scroll ============ -->
-<main id="stageWrap">
-  <div id="stage">
-
-    <!-- dark: hero, about, marquee -->
-    <section class="layer" id="dark" aria-label="Introduction">
-      <div id="darkPage">
-        <div id="hero">
-          <div class="fr">
-            <div class="a" id="flare"></div>
-            <h1 class="a" id="head" aria-label="Designed to grow your business"><div id="hl1" aria-hidden="true"></div><div id="hl2" aria-hidden="true"><span id="hlFix"></span><span id="wordBox"></span></div></h1>
-            <div class="a row" style="left:38px;top:319px;gap:23px" data-in="7.9">
-              <a class="btn roll" href="~/contact/#discuss" style="width:236px"><span data-t="Discuss your project"></span><b>→</b></a>
-              <a class="btn roll" href="~/book-a-call/#request" style="width:236px"><span data-t="Book a free call"></span><b>→</b></a>
-            </div>
-          </div>
-          <div class="fr b">
-            <div class="a box2" id="heroBox" style="left:1622px;top:655px;width:246px" data-in="7.6">
-              <div class="c1"><svg width="30" height="20" viewBox="0 0 30 20" aria-hidden="true"><ellipse cx="15" cy="10" rx="14" ry="9" fill="none" stroke="currentColor"/><ellipse cx="15" cy="10" rx="6" ry="9" fill="none" stroke="currentColor"/><line x1="1" y1="10" x2="29" y2="10" stroke="currentColor"/></svg><span class="cap13" id="heroEst"></span></div>
-              <div class="cap13" id="heroYears"></div>
-            </div>
-            <p class="a p18 just" id="heroBlurb" style="left:1624px;top:751px;width:244px" data-in="7.7"></p>
-            <div class="a cap center" style="left:0;width:1920px;top:774px;line-height:25px" data-in="7.9"><span id="heroHold"></span><br><span id="heroDare"></span></div>
-            <div class="a heroDot" style="left:38px;top:792px" data-in="7.9" aria-hidden="true"><i></i></div>
-          </div>
-        </div>
-        <div class="fr" id="aboutFr">
-          <div class="a cap" style="left:38px;top:176px" data-in="19.6">About</div>
-          <p class="a h89" id="aboutTxt" style="left:192px;top:161px;width:1676px;text-indent:151px"></p>
-          <div class="a hr" style="left:192px;top:505px;width:1676px" data-in="21.8"></div>
-          <div class="a plus" style="left:1256px;top:494px" data-in="21.8">+</div>
-          <div class="a cap lh17" id="aboutLeft" style="left:192px;top:595px" data-in="22.3"></div>
-          <p class="a p18" id="aboutMission" style="left:1272px;top:615px;width:375px" data-in="22.5"></p>
-          <div class="a" style="left:1272px;top:766px" data-in="22.7"><a class="btn roll" href="~/about/" style="width:190px"><span data-t="More about us"></span><b>→</b></a></div>
-          <div class="a cap lh17" id="aboutFocus" style="left:192px;top:1009px" data-in="25.6"></div>
-          <div class="a" style="left:0;top:1205px;width:1920px;height:150px"><div class="a" id="mq" aria-label="Design. Develop. Deliver."></div></div>
-        </div>
+<main class="pg" id="top">
+  <section class="land-hero" data-theme="dark" aria-label="Introduction">
+    <div class="land-glow" aria-hidden="true"></div>
+    <div class="land-mark" id="heroMark" aria-hidden="true"></div>
+    <p class="cap land-kicker rise"><span class="ic">✦</span> SMARTINDIA.DIGITAL · Est. Tirupur</p>
+    <h1 class="rise">Designed to<br>grow your <span id="word" class="ic">business.</span></h1>
+    <p class="tx land-lead rise">Web applications and mobile applications, built for reach, growth and impact. Two services. One studio in Tirupur.</p>
+    <div class="land-cta rise">
+      <a class="btn roll" href="~/#web"><span data-t="View services"><i>View services</i><i aria-hidden="true">View services</i></span><b>→</b></a>
+      <a class="btn roll" href="~/#enquire"><span data-t="Discuss your project"><i>Discuss your project</i><i aria-hidden="true">Discuss your project</i></span><b>→</b></a>
+    </div>
+    <dl class="land-stats rise">
+      <div>
+        <dt>Satisfied clients</dt>
+        <dd data-count="92" data-suffix="%">92%</dd>
+        <p class="sm">Clients returning to us again and again.</p>
       </div>
-    </section>
-
-    <!-- light: key facts, clients, selected work -->
-    <section class="layer" id="light" aria-label="Key facts and selected work">
-      <div id="lightPage">
-        <div id="lightBand"></div>
-        <div class="fr">
-          <div class="a center" style="left:0;width:1920px;top:94px">
-            <h2 class="h89" id="kfTitle" aria-label="Key facts"></h2>
-            <p class="p17" style="margin-top:43px" data-in="32.2">A snapshot of our<br>experience and impact.</p>
-          </div>
-          <div class="a" id="kwrap" style="left:0;top:300px"></div>
-          <div class="a center" style="left:0;width:1920px;top:886px">
-            <div class="cap" style="color:#272727">Our clients</div>
-            <div id="partners"></div>
-          </div>
-          <div class="a hr dkhr" style="left:38px;top:1116px;width:1844px"></div>
-          <div class="a plus dk" style="left:950px;top:1106px">+</div>
-        </div>
-        <div id="workWin"><div class="fr c"><div class="a" id="wtrack"></div></div></div>
+      <div>
+        <dt>Happy customers</dt>
+        <dd data-count="300" data-suffix="+">300+</dd>
+        <p class="sm">4.8/5 average rating from 5k+ customer reviews.</p>
       </div>
-    </section>
-
-    <!-- services -->
-    <section class="layer" id="svc" aria-label="Our services">
-      <div class="fr c">
-        <div class="a cap center" id="svcLbl" style="left:0;width:1920px;top:112px">Our services</div>
-        <div class="a cap center" id="svcB1" style="left:0;width:1920px;top:766px"><span id="b1a">✦ Designed with intent. Built to grow.</span><span id="b1b">✦ Different services. One standard of craft.</span></div>
-        <a class="a btn roll" id="svcB2" href="~/services/" style="left:1680px;top:758px;width:190px"><span data-t="View services"></span><b>→</b></a>
-        <div class="a" id="labs"></div>
+      <div>
+        <dt>Years in digital service</dt>
+        <dd data-count="15" data-suffix="+">15+</dd>
+        <p class="sm">Different skills. One standard.</p>
       </div>
-    </section>
-    <div class="layer" id="svText"><div class="fr c"><h2 class="a" id="svWrap" aria-label="Design. Mobile and web application development."></h2></div></div>
+    </dl>
+    <p class="cap land-scroll rise">Scroll to <span class="ic">✸</span> explore</p>
+  </section>
 
-    <!-- testimonials -->
-    <section class="layer" id="trans" aria-label="Client testimonials">
-      <div id="trPage">
-        <div id="trBg"></div>
-        <div class="fr" id="trFr"></div>
-      </div>
-    </section>
-
-    <!-- design in motion -->
-    <section class="layer" id="dim" aria-label="Design in motion">
-      <div class="fr c">
-        <svg class="a" width="1920" height="868" style="left:0;top:0" aria-hidden="true"><path id="dimArc" fill="none" stroke="rgba(0,0,0,.12)" stroke-width="1.2"/></svg>
-        <h2 class="a dimT" id="dimA" style="top:286px" aria-label="Design in motion"></h2>
-        <div class="a dimT" id="dimB" style="top:462px" aria-hidden="true"></div>
-        <div class="a cap center lh17" id="dimS" style="left:851px;top:417px;width:220px">Exploring ideas through<br>daily design practice.</div>
-        <div class="a" id="dimLine" style="left:50px;top:650px;width:1600px"></div>
-        <div class="a" id="rib"><div id="ribIn"></div></div>
-        <p class="a p17" id="dimDesc" style="left:38px;top:753px;width:330px">Concepts, applications and interface designs crafted for our clients.</p>
-        <a class="a btn roll" id="dimBtn" href="~/projects/" style="left:1701px;top:758px;width:182px"><span data-t="View portfolio"></span><b>→</b></a>
-      </div>
-    </section>
+  <div class="land-mq" data-theme="dark" aria-hidden="true">
+    <div class="land-mq-in">
+      <span>Web applications</span><i>+</i><span>Mobile applications</span><i>+</i><span>Scope to launch</span><i>+</i><span>Tirupur</span><i>+</i>
+      <span>Web applications</span><i>+</i><span>Mobile applications</span><i>+</i><span>Scope to launch</span><i>+</i><span>Tirupur</span><i>+</i>
+    </div>
   </div>
+
+  <section class="sec light" id="web" data-theme="light" aria-labelledby="web-title">
+    <div class="svc-top">
+      <div class="svc-copy">
+        <div class="svc-k rv"><b>01</b><span class="cap">Web Application Development</span></div>
+        <h2 class="t2 rv" id="web-title">Custom web applications that work as hard as the business.</h2>
+        <p class="tx rv">Your web application should work as hard as your business does. SMARTINDIA.DIGITAL builds custom, scalable products from scratch with Laravel and React, shaped around your brand and the job the software has to do.</p>
+        <p class="tx rv">From the first concept and interface through development, testing and deployment, the same studio handles the build. Performance, security and room to grow are part of the work, not a later phase.</p>
+        <div class="tech rv" aria-label="Technologies">
+          <span>Laravel</span><span>React</span><span>APIs</span><span>E-commerce</span><span>Dashboards</span>
+        </div>
+        <div class="svc-cta rv"><a class="btn roll" href="~/#pricing"><span data-t="See web packages"><i>See web packages</i><i aria-hidden="true">See web packages</i></span><b>→</b></a></div>
+      </div>
+      <div class="rv">
+        <p class="sm" style="margin-bottom:10px">What a web application engagement covers</p>
+        <button class="feat" type="button" aria-expanded="false"><b>Product design</b><small>Screens, flows and a written scope before development starts.</small></button>
+        <button class="feat" type="button" aria-expanded="false"><b>Custom build</b><small>Laravel or React, built for this product rather than a recycled template.</small></button>
+        <button class="feat" type="button" aria-expanded="false"><b>Backend and APIs</b><small>Accounts, roles, integrations and the data the product has to keep.</small></button>
+        <button class="feat" type="button" aria-expanded="false"><b>Commerce flows</b><small>Stores and operational tools when the product needs them, including Shopify or WooCommerce where that is the right base.</small></button>
+        <button class="feat" type="button" aria-expanded="false"><b>Launch and care</b><small>Testing, deployment, a handover walkthrough, and support if you want the studio to stay.</small></button>
+      </div>
+    </div>
+    <div class="proof">
+      <a class="rv" href="https://theerabooks.com/" target="_blank" rel="noopener">
+        <span class="cap">E-commerce · 4 days</span>
+        <h3>Theera Books</h3>
+        <p class="sm">An online bookstore. Opens the client site.</p>
+      </a>
+      <a class="rv" href="https://tejasviniayurveda.com/" target="_blank" rel="noopener">
+        <span class="cap">E-commerce · 4 days</span>
+        <h3>Tejaswini Kerala Ayurvedam</h3>
+        <p class="sm">An Ayurveda health care store. Opens the client site.</p>
+      </a>
+      <a class="rv" href="https://svsfuturepower.in/" target="_blank" rel="noopener">
+        <span class="cap">Dynamic website · 2 days</span>
+        <h3>SVS Future Power</h3>
+        <p class="sm">A solar energy company. Opens the client site.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="sec dark" id="mobile" data-theme="dark" aria-labelledby="mobile-title">
+    <div class="svc-top">
+      <div class="svc-copy">
+        <div class="svc-k rv"><b>02</b><span class="cap">Mobile Application Development</span></div>
+        <h2 class="t2 rv" id="mobile-title">iOS and Android applications people finish using.</h2>
+        <p class="tx rv">In a mobile-first market, the application is often the product. SMARTINDIA.DIGITAL designs and builds iOS and Android apps with clear journeys, from the first sketch through store submission.</p>
+        <p class="tx rv">Native builds and cross-platform builds in Flutter or React Native are both in the studio. The choice follows the product: one codebase when that serves the roadmap, native when the platform calls for it. Security, speed and a calm interface stay in either case.</p>
+        <div class="tech rv" aria-label="Technologies">
+          <span>Flutter</span><span>React Native</span><span>iOS</span><span>Android</span><span>APIs</span>
+        </div>
+        <div class="svc-cta rv"><a class="btn roll" href="~/#pricing"><span data-t="See mobile packages"><i>See mobile packages</i><i aria-hidden="true">See mobile packages</i></span><b>→</b></a></div>
+      </div>
+      <div class="rv">
+        <p class="sm" style="margin-bottom:10px">What a mobile engagement covers</p>
+        <button class="feat" type="button" aria-expanded="false"><b>Journeys and interface</b><small>Mobile UI and UX designed around the task, not a shrunk website.</small></button>
+        <button class="feat" type="button" aria-expanded="false"><b>iOS and Android</b><small>A cross-platform app, or a native app, tested on current versions of both systems.</small></button>
+        <button class="feat" type="button" aria-expanded="false"><b>Accounts and backend</b><small>API integration and the server-side pieces the app needs to sign in, save and sync.</small></button>
+        <button class="feat" type="button" aria-expanded="false"><b>Store release</b><small>Support submitting the build to the App Store and Google Play.</small></button>
+        <button class="feat" type="button" aria-expanded="false"><b>After launch</b><small>A care package for updates, security and performance once the app is in people’s hands.</small></button>
+      </div>
+    </div>
+    <div class="proof">
+      <article class="rv">
+        <span class="cap">Mobile application</span>
+        <h3>TechSolutions</h3>
+        <p class="sm">A customer app. The founder called it seamless, and the customers agreed.</p>
+      </article>
+      <article class="rv">
+        <span class="cap">Platforms</span>
+        <h3>iOS and Android</h3>
+        <p class="sm">One roadmap, both stores, with the backend the product actually needs.</p>
+      </article>
+      <article class="rv">
+        <span class="cap">How we ship</span>
+        <h3>Test, then submit</h3>
+        <p class="sm">Rigorous testing before launch, then help getting the build onto the stores.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec light" id="pricing" data-theme="light" aria-labelledby="price-title">
+    <div class="split-note">
+      <div>
+        <div class="cap rv">Pricing</div>
+        <h2 class="t2 rv" id="price-title">Every package, and what it includes.</h2>
+      </div>
+      <p class="tx rv">Web applications and mobile applications are priced to the package below. SMARTINDIA.DIGITAL confirms a written quote for that package before development starts. A change in scope changes the quote, and the change is agreed in writing first. Choose a project build, a monthly retainer, or support after launch.</p>
+    </div>
+
+    <div class="price-group">
+      <h3 class="t3 rv">Web Application Development</h3>
+      <p class="sm rv">Custom web software: product screens, Laravel or React, and the backend the product needs.</p>
+      <div class="price-grid">
+        <article class="plan rv" data-service="Web Application Development" data-package="Foundation">
+          <div class="cap">Project-based</div>
+          <h3 class="t4">Foundation</h3>
+          <div class="quote-fig"><strong>Custom quote</strong><em>Written figure before development starts.</em></div>
+          <p class="for">A first web application with one clear job to do.</p>
+          <ul class="plus-list">
+            <li class="sm">Discovery session and a written scope</li>
+            <li class="sm">Interface design for the core screens</li>
+            <li class="sm">Custom build in Laravel or React</li>
+            <li class="sm">Accounts and one user role</li>
+            <li class="sm">Responsive layout for desktop, tablet and mobile</li>
+            <li class="sm">Testing, deployment and a handover walkthrough</li>
+          </ul>
+          <a class="btn roll" href="~/#enquire" data-service="Web Application Development" data-package="Foundation"><span data-t="Ask for this quote"><i>Ask for this quote</i><i aria-hidden="true">Ask for this quote</i></span><b>→</b></a>
+        </article>
+        <article class="plan featured rv" data-service="Web Application Development" data-package="Growth">
+          <div class="cap">Project-based · Most requested</div>
+          <h3 class="t4">Growth</h3>
+          <div class="quote-fig"><strong>Custom quote</strong><em>Written figure before development starts.</em></div>
+          <p class="for">A web application that runs part of the business: a portal, a store, or an internal tool.</p>
+          <ul class="plus-list">
+            <li class="sm">Everything in Foundation</li>
+            <li class="sm">Admin dashboard</li>
+            <li class="sm">API integration and backend development</li>
+            <li class="sm">Additional roles and permissions</li>
+            <li class="sm">Commerce or operational flows when the product needs them</li>
+            <li class="sm">Performance and security pass, then launch support</li>
+          </ul>
+          <a class="btn roll" href="~/#enquire" data-service="Web Application Development" data-package="Growth"><span data-t="Ask for this quote"><i>Ask for this quote</i><i aria-hidden="true">Ask for this quote</i></span><b>→</b></a>
+        </article>
+        <article class="plan rv" data-service="Web Application Development" data-package="Partner">
+          <div class="cap">Monthly retainer</div>
+          <h3 class="t4">Partner</h3>
+          <div class="quote-fig"><strong>Custom quote</strong><em>Billed month by month. The month’s work is agreed in writing.</em></div>
+          <p class="for">Teams that want the same studio after the first release.</p>
+          <ul class="plus-list">
+            <li class="sm">New features and improvements</li>
+            <li class="sm">Design support</li>
+            <li class="sm">One team that already knows the product</li>
+            <li class="sm">Replies during studio hours, Mon – Sat 8:00 – 6:30</li>
+            <li class="sm">Scope agreed at the start of each month</li>
+          </ul>
+          <a class="btn roll" href="~/#enquire" data-service="Web Application Development" data-package="Partner"><span data-t="Ask for this quote"><i>Ask for this quote</i><i aria-hidden="true">Ask for this quote</i></span><b>→</b></a>
+        </article>
+      </div>
+    </div>
+
+    <div class="price-group">
+      <h3 class="t3 rv">Mobile Application Development</h3>
+      <p class="sm rv">Customer apps and internal apps for iOS and Android, including the backend they talk to.</p>
+      <div class="price-grid">
+        <article class="plan rv" data-service="Mobile Application Development" data-package="Foundation">
+          <div class="cap">Project-based</div>
+          <h3 class="t4">Foundation</h3>
+          <div class="quote-fig"><strong>Custom quote</strong><em>Written figure before development starts.</em></div>
+          <p class="for">A first release people can install.</p>
+          <ul class="plus-list">
+            <li class="sm">Discovery and user journeys</li>
+            <li class="sm">Mobile interface design</li>
+            <li class="sm">Flutter, React Native, or one native platform</li>
+            <li class="sm">API integration</li>
+            <li class="sm">Testing on current iOS and Android versions</li>
+            <li class="sm">Support submitting to the App Store and Google Play</li>
+          </ul>
+          <a class="btn roll" href="~/#enquire" data-service="Mobile Application Development" data-package="Foundation"><span data-t="Ask for this quote"><i>Ask for this quote</i><i aria-hidden="true">Ask for this quote</i></span><b>→</b></a>
+        </article>
+        <article class="plan featured rv" data-service="Mobile Application Development" data-package="Growth">
+          <div class="cap">Project-based · Most requested</div>
+          <h3 class="t4">Growth</h3>
+          <div class="quote-fig"><strong>Custom quote</strong><em>Written figure before development starts.</em></div>
+          <p class="for">A product on both iOS and Android, with accounts and a backend.</p>
+          <ul class="plus-list">
+            <li class="sm">Everything in Foundation</li>
+            <li class="sm">iOS and Android release</li>
+            <li class="sm">Accounts, core product flows and backend</li>
+            <li class="sm">Push notifications when the product needs them</li>
+            <li class="sm">Security and performance pass</li>
+            <li class="sm">Store deployment</li>
+          </ul>
+          <a class="btn roll" href="~/#enquire" data-service="Mobile Application Development" data-package="Growth"><span data-t="Ask for this quote"><i>Ask for this quote</i><i aria-hidden="true">Ask for this quote</i></span><b>→</b></a>
+        </article>
+        <article class="plan rv" data-service="Mobile Application Development" data-package="Care">
+          <div class="cap">Support &amp; maintenance</div>
+          <h3 class="t4">Care</h3>
+          <div class="quote-fig"><strong>Custom quote</strong><em>A support package after the app is live.</em></div>
+          <p class="for">An application that is already shipped and needs to stay healthy.</p>
+          <ul class="plus-list">
+            <li class="sm">Updates after launch</li>
+            <li class="sm">Security updates</li>
+            <li class="sm">Performance checks</li>
+            <li class="sm">Fixes for issues found in real use</li>
+            <li class="sm">A studio that already knows the codebase</li>
+          </ul>
+          <a class="btn roll" href="~/#enquire" data-service="Mobile Application Development" data-package="Care"><span data-t="Ask for this quote"><i>Ask for this quote</i><i aria-hidden="true">Ask for this quote</i></span><b>→</b></a>
+        </article>
+      </div>
+    </div>
+    <p class="sm scope-note rv">Recent client websites and stores in the portfolio shipped in 2 to 4 days. A custom web or mobile application is scheduled once the written scope and quote are agreed. There is no work before that figure is confirmed.</p>
+  </section>
+
+  <section class="sec dark" id="why" data-theme="dark" aria-labelledby="why-title">
+    <div class="cap rv">Why SMARTINDIA.DIGITAL</div>
+    <h2 class="t2 rv" id="why-title">Six reasons clients stay.</h2>
+    <div class="why-grid">
+      <article class="why-card rv"><span class="cap">01</span><h3>Scope before screens</h3><p class="sm">Every project starts with discovery: goals, users and a written scope. The quote follows that scope.</p></article>
+      <article class="why-card rv"><span class="cap">02</span><h3>Built for this product</h3><p class="sm">Laravel, React, Flutter and React Native, used where they fit. The application is shaped for the business, not the other way around.</p></article>
+      <article class="why-card rv"><span class="cap">03</span><h3>One standard of craft</h3><p class="sm">Design. Develop. Deliver. Interface, engineering and release sit with the same studio in Tirupur.</p></article>
+      <article class="why-card rv"><span class="cap">04</span><h3>Plain commercial terms</h3><p class="sm">Project-based, monthly retainer, or support after launch. You see what is included on this page, then a written figure.</p></article>
+      <article class="why-card rv"><span class="cap">05</span><h3>Tested before it ships</h3><p class="sm">Browsers and devices are checked before launch. Mobile work includes help submitting to the App Store and Google Play.</p></article>
+      <article class="why-card rv"><span class="cap">06</span><h3>A team that stays</h3><p class="sm">Support keeps the web application or mobile app updated, secure and fast. 92% of clients come back.</p></article>
+    </div>
+    <div class="voices">
+      <figure class="rv">
+        <blockquote>“SMARTINDIA.DIGITAL transformed our online presence completely. Our sales increased by 40% within the first three months of launching the new website.”</blockquote>
+        <figcaption><span class="t-av" aria-hidden="true">SJ</span><span class="sm"><b>Sarah Johnson</b><br><span class="dimt">CEO, FashionNova</span></span></figcaption>
+      </figure>
+      <figure class="rv">
+        <blockquote>“The mobile app they developed for us is seamless and user-friendly. We’ve received amazing feedback from our customers. Highly recommend their app development services for anyone looking for quality work.”</blockquote>
+        <figcaption><span class="t-av" aria-hidden="true">RK</span><span class="sm"><b>Rajesh Kumar</b><br><span class="dimt">Founder, TechSolutions</span></span></figcaption>
+      </figure>
+    </div>
+    <div class="rates slim">
+      <div class="rate rv"><div class="cap">Capterra</div><div class="t3">4.8/5</div><div class="sm">102 Reviews</div></div>
+      <div class="rate rv"><div class="cap">Google</div><div class="t3">4.8/5</div><div class="sm">102 Reviews</div></div>
+    </div>
+  </section>
+
+  <section class="sec light" id="process" data-theme="light" aria-labelledby="process-title">
+    <div class="cap rv">Development process</div>
+    <h2 class="t2 rv" id="process-title">How a project is delivered.</h2>
+    <p class="tx sub rv">You always know which stage the work is in. Nothing moves into build until the scope and the quote are agreed.</p>
+    <ol class="steps">
+      <li class="step rv"><span class="cap">Step 01</span><h3 class="t4">Discovery</h3><p class="sm">A working session on goals, users and constraints. You leave with a written scope.</p></li>
+      <li class="step rv"><span class="cap">Step 02</span><h3 class="t4">Quote</h3><p class="sm">A written price for the package and scope. Development starts after you accept it.</p></li>
+      <li class="step rv"><span class="cap">Step 03</span><h3 class="t4">Design</h3><p class="sm">Flows and interface, reviewed with you before engineering locks them in.</p></li>
+      <li class="step rv"><span class="cap">Step 04</span><h3 class="t4">Development</h3><p class="sm">Laravel, React, Flutter or React Native, with the APIs and accounts the product needs. You see the build as it comes together.</p></li>
+      <li class="step rv"><span class="cap">Step 05</span><h3 class="t4">Test and launch</h3><p class="sm">Testing on current browsers, and on iOS and Android for apps. Then deployment. Mobile apps include store-submission support.</p></li>
+      <li class="step rv"><span class="cap">Step 06</span><h3 class="t4">Handover and care</h3><p class="sm">A walkthrough of the finished application. Partner or Care can continue after launch if you want the same team on call.</p></li>
+    </ol>
+    <div class="deliver">
+      <article class="rv"><span class="cap">Before we start</span><h3>Written scope and quote</h3><p class="sm">The package on this page, adjusted to your product, with a figure you can accept or decline.</p></article>
+      <article class="rv"><span class="cap">While we build</span><h3>Reviews at each stage</h3><p class="sm">Design, then the working software. Extra scope is priced before it is built.</p></article>
+      <article class="rv"><span class="cap">When we ship</span><h3>A product you can run</h3><p class="sm">Deployed web application, or a mobile build submitted to the stores, plus a handover. Studio hours are Mon – Sat, 8:00 – 6:30 IST, in Tirupur.</p></article>
+    </div>
+    <div class="faq-wrap">
+      <div>
+        <h3 class="t3 rv">Questions</h3>
+        <p class="sm rv">Short answers. The enquiry form is the way to talk about a specific product.</p>
+      </div>
+      <div class="qas">
+        <details class="qa rv" name="lfaq" open>
+          <summary><span class="t4">What does SMARTINDIA.DIGITAL build?</span><i aria-hidden="true">+</i></summary>
+          <p class="tx">Web applications and mobile applications. Web work covers custom products in Laravel and React, including dashboards, APIs and commerce flows. Mobile work covers iOS and Android, native or with Flutter and React Native.</p>
+        </details>
+        <details class="qa rv" name="lfaq">
+          <summary><span class="t4">How is the price decided?</span><i aria-hidden="true">+</i></summary>
+          <p class="tx">Pick a package. We confirm a written quote for that scope before development. Project builds are one engagement. Partner is a monthly retainer. Care is support after a mobile app has launched. The figure is part of the quote, not a rate printed in advance.</p>
+        </details>
+        <details class="qa rv" name="lfaq">
+          <summary><span class="t4">How long does delivery take?</span><i aria-hidden="true">+</i></summary>
+          <p class="tx">Websites and stores in the portfolio were delivered in 2 to 4 days. A custom web or mobile application takes the six stages above and is scheduled after the quote is accepted. You are told the plan with the quote.</p>
+        </details>
+        <details class="qa rv" name="lfaq">
+          <summary><span class="t4">What happens after launch?</span><i aria-hidden="true">+</i></summary>
+          <p class="tx">You get a handover walkthrough. Web clients can stay on the Partner retainer. Mobile clients can stay on Care. Both keep the product updated, secure and performing.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec dark" id="enquire" data-theme="dark" aria-labelledby="enq-title">
+    <div class="enq">
+      <div class="enq-side">
+        <div class="cap rv">Client enquiry</div>
+        <h2 class="t2 rv" id="enq-title">Tell us what you want to build.</h2>
+        <p class="tx rv">Share the service, the package and a short note. The studio replies during Mon – Sat, 8:00 – 6:30.</p>
+        <div class="enq-meta rv">
+          <div class="cap dim">Call</div>
+          <a class="t3" href="tel:+919994900470">+91 99949 00470</a>
+          <div class="cap dim" style="margin-top:18px">Email</div>
+          <a class="t4" href="mailto:info@smartindia.ai">info@smartindia.ai</a>
+          <p class="sm" style="margin-top:18px">SMARTINDIA.DIGITAL<br>Tirupur, Tamil Nadu, India</p>
+        </div>
+      </div>
+      <form class="cform rv" id="cform" action="/contact/store" method="post" novalidate>
+        <label class="fld"><span class="fld-l">Name</span><input name="name" type="text" placeholder="Your name" autocomplete="name" required></label>
+        <label class="fld"><span class="fld-l">Email</span><input name="email" type="email" placeholder="you@company.com" autocomplete="email" required></label>
+        <label class="fld"><span class="fld-l">Phone</span><input name="phone" type="tel" placeholder="+91" autocomplete="tel"></label>
+        <label class="fld"><span class="fld-l">Service</span>
+          <select name="service" required>
+            <option value="Web Application Development">Web Application Development</option>
+            <option value="Mobile Application Development">Mobile Application Development</option>
+          </select>
+        </label>
+        <label class="fld"><span class="fld-l">Package</span>
+          <select name="package" required>
+            <optgroup label="Web Application Development">
+              <option value="Foundation">Foundation — project</option>
+              <option value="Growth">Growth — project</option>
+              <option value="Partner">Partner — monthly retainer</option>
+            </optgroup>
+            <optgroup label="Mobile Application Development">
+              <option value="Foundation">Foundation — project</option>
+              <option value="Growth">Growth — project</option>
+              <option value="Care">Care — support</option>
+            </optgroup>
+          </select>
+        </label>
+        <label class="fld"><span class="fld-l">Subject</span><input name="subject" type="text" placeholder="Filled when you pick a package"></label>
+        <label class="fld wide"><span class="fld-l">About the project</span><textarea name="message" rows="6" placeholder="What should the application do, and who is it for?" required></textarea></label>
+        <p class="err wide" id="formErr" hidden></p>
+        <div class="cform-foot wide">
+          <button class="btn roll" type="reset"><span data-t="Reset"><i>Reset</i><i aria-hidden="true">Reset</i></span><b>×</b></button>
+          <button class="btn roll" type="submit"><span data-t="Send enquiry"><i>Send enquiry</i><i aria-hidden="true">Send enquiry</i></span><b>→</b></button>
+        </div>
+        <div class="form-status form-ok wide" id="sentOk" hidden tabindex="-1">
+          <h3 class="t4">Enquiry received</h3>
+          <p class="sm">The message is with the studio. We reply to the email you entered, during Mon – Sat, 8:00 – 6:30.</p>
+        </div>
+        <div class="sent wide form-status" id="sentMail" hidden tabindex="-1">
+          <h3 class="t4">Almost there: your message is ready</h3>
+          <p class="sm">Your email app should have opened with everything filled in. Press send there and it reaches the studio. The form also posts to the studio’s enquiry route when this site is running on that server.</p>
+          <p class="sm">If the email app did not open, use one of these:</p>
+          <div class="btn-row">
+            <a class="btn roll" data-gmail href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=info@smartindia.ai" target="_blank" rel="noopener"><span data-t="Send with Gmail"><i>Send with Gmail</i><i aria-hidden="true">Send with Gmail</i></span><b>↗</b></a>
+            <button class="btn roll" type="button" data-copy-message><span data-t="Copy message"><i>Copy message</i><i aria-hidden="true">Copy message</i></span><b>⧉</b></button>
+          </div>
+          <p class="sm">Or reach the studio directly: <a class="ulink" href="mailto:info@smartindia.ai">info@smartindia.ai</a> · <a class="ulink" href="tel:+919994900470">+91 99949 00470</a></p>
+        </div>
+      </form>
+    </div>
+  </section>
 </main>
 
-<!-- ============ MOBILE / REDUCED-MOTION LAYOUT (built by lite.js) ============ -->
-<main id="lite" hidden></main>
+<footer id="footer" data-theme="dark">
+  <canvas id="lines" aria-hidden="true"></canvas>
+  <div class="ffr">
+    <div class="fk cap">Let’s build what inspires.</div>
+    <div class="fclock cap" id="clock" aria-label="Local time in Tirupur"></div>
+    <h2 class="fHead">Ready to build something bold?</h2>
+    <div class="fcta">
+      <a class="btn roll" href="~/#enquire"><span data-t="Discuss your project"><i>Discuss your project</i><i aria-hidden="true">Discuss your project</i></span><b>→</b></a>
+      <a class="btn roll" href="~/#pricing"><span data-t="View packages"><i>View packages</i><i aria-hidden="true">View packages</i></span><b>→</b></a>
+    </div>
+    <div class="finfo">
+      <div class="cap dim">Business enquiry</div>
+      <p class="p17">E. <a class="roll" href="mailto:info@smartindia.ai"><span data-t="info@smartindia.ai"><i>info@smartindia.ai</i><i aria-hidden="true">info@smartindia.ai</i></span></a></p>
+      <p class="p17">P. <a class="roll" href="tel:+919994900470"><span data-t="+91 99949 00470"><i>+91 99949 00470</i><i aria-hidden="true">+91 99949 00470</i></span></a></p>
+    </div>
+    <div class="fsoc">
+      <div class="cap dim">Social</div>
+      <div id="fSocial">
+        <a class="roll" href="#" data-soon><span data-t="Instagram"><i>Instagram</i><i aria-hidden="true">Instagram</i></span></a>
+        <a class="roll" href="#" data-soon><span data-t="Facebook"><i>Facebook</i><i aria-hidden="true">Facebook</i></span></a>
+        <a class="roll" href="#" data-soon><span data-t="LinkedIn"><i>LinkedIn</i><i aria-hidden="true">LinkedIn</i></span></a>
+        <a class="roll" href="#" data-soon><span data-t="Twitter"><i>Twitter</i><i aria-hidden="true">Twitter</i></span></a>
+      </div>
+    </div>
+    <div class="fbot"><span class="cap dim">© 2026 SMARTINDIA.DIGITAL</span><span class="cap dim">Tirupur, Tamil Nadu, India</span></div>
+    <svg id="wordmark" viewBox="0 0 1924 491" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="wmGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8d8d8"/><stop offset=".72" stop-color="#d8d8d8" stop-opacity=".55"/><stop offset="1" stop-color="#d8d8d8" stop-opacity=".12"/></linearGradient></defs><text x="962" y="452" text-anchor="middle" textLength="1910" lengthAdjust="spacingAndGlyphs">SMARTINDIA</text></svg>
+  </div>
+</footer>
+<div id="sbar" aria-hidden="true"><i id="sthumb"></i></div>
+<div id="wipe" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
 
-<!--site:footer-->
-
-<script type="module" src="/src/main.js"></script>
+<script type="module" src="/src/landing.js"></script>
 </body>
 </html>

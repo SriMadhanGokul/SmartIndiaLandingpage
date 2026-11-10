@@ -54,9 +54,9 @@ Each page is built as real HTML, so addresses can be opened directly, refreshed 
 
 Two layouts are chosen before the first paint (the script in `site/layout.js`).
 
-- **Full** is used on landscape screens at least 1100 px wide, with WebGL available and no reduced-motion setting.
+- **Full** is used on landscape screens at least 1100 px wide, with WebGL2 on a real graphics chip and no reduced-motion setting.
 - **Lite** covers phones and tablets. It tells the same 3D story in normal page flow (`src/mobile3d.js`).
-- **Lite without 3D** is the fallback for reduced motion, browsers without WebGL2, and phones that prove too slow: the same content as a plain stacked page with light reveal animations.
+- **Lite without 3D** is the fallback for reduced motion, browsers without WebGL2, machines with no graphics chip (software rendering) and phones that prove too slow: the same content as a plain stacked page with light reveal animations and no loader.
 
 **Homepage (full layout).** The whole story plays in one pinned viewport: loader → hero → about → glass marquee → key facts → selected work → services and the falling stone → testimonials → design in motion → footer.
 - The scroll position is mapped onto the approved video's timeline (`buildMap()` in `src/desktop.js`).
@@ -71,6 +71,7 @@ Two layouts are chosen before the first paint (the script in `site/layout.js`).
 - In this layout the design frame is scaled to fit a slice 560 design px wide (`LITE_W` in `src/gl/core.js`, and the script in `site/layout.js`), so the 3D stays on screen in portrait.
 - Heights use `100lvh`, the tallest viewport, so a phone's URL bar sliding away doesn't move anything. Items near the bottom of a stage allow for the bar with `100lvh - 100svh`.
 - To keep it smooth on phones, the scenes use smaller textures and fewer objects, and the 3D scene is shaded once and copied to the screen.
+- Only the hero's scenes get ready behind the loader. The storm and stone are built after it, a little per frame (`buildServices`), and the services stage holds on its white panel if the visitor gets there first.
 - If frames stay slow, the render resolution steps down in two stages. If a phone is still too slow, or the WebGL context is lost for good, the site switches to the layout without 3D for the rest of the visit (`governor` in `src/gl/core.js`).
 
 **Inner pages.** These use normal document flow, sized from `--px` (one design pixel at 1920 wide). They add a 3D S behind the hero wherever WebGL is available, slat wipes between sections, and a five-slat transition between pages.
@@ -79,7 +80,7 @@ Two layouts are chosen before the first paint (the script in `site/layout.js`).
 
 | File | What it holds |
 |---|---|
-| `src/data.js` | **All copy, facts and lists.** Edit text here. |
+| `src/data.js` | **All copy, facts and lists, and the search listings (`SEO`).** Edit text here. |
 | `site/pages.js` | The inner page templates and the list of pages |
 | `site/layout.js` | Shared `<head>`, header, menu overlay and footer |
 | `site/plugin.js` | Vite plugin that turns the page list into real HTML files |
@@ -94,6 +95,25 @@ Two layouts are chosen before the first paint (the script in `site/layout.js`).
 | `src/gl/` | WebGL: `core` (camera and frame), `logo` (the fire-lit S), `glass` (glass type), `stone`, `storm`, `services` |
 | `src/styles.css`, `src/pages.css` | Shared and homepage styles; inner page styles |
 | `public/media/` | Images and `ambient.mp3` |
+
+## Search listings and page speed
+
+**Titles and descriptions** are in `SEO` at the end of `src/data.js`, one for each page.
+- Keep a title to 60 characters. Inner pages add " – SMARTINDIA.DIGITAL" after it, so write 39 or fewer there.
+- Keep a description to 160 characters, with the words people search for near the start.
+- Project pages are written by `SEO.project`, and a blog post can set a shorter `seoTitle`.
+
+**Canonical tags** are added to every page from `SITE_URL` in `site/layout.js`. The 404 page is `noindex` and has no canonical tag. The GitHub Pages preview is `noindex` on every page, so it never competes with the real site.
+
+**The homepage has one real `<h1>` in its HTML**, painted straight away. The desktop stage uses `role="heading"`, and whichever layout isn't used is removed when the page starts.
+
+**What keeps it fast:**
+- Fonts are self-hosted through `@fontsource`, imported at the top of `src/styles.css`, and the main one is preloaded. There are no requests to Google Fonts.
+- Images in `public/media/` are WebP.
+- The 3D code (about 135 KB gzipped) only downloads when 3D will actually run.
+- Set-up work is split up, shaders compile in the background where the browser allows it, and moving parts use transforms, so they don't cause layout shifts.
+
+**Reading a PageSpeed score:** Google's lab has no graphics chip, so PageSpeed Insights measures the flat layout. Visitors on real phones and computers run the 3D, which is heavier than that score shows. Lighthouse in Chrome DevTools uses your own graphics chip, so it measures the 3D and scores lower.
 
 ## Content rule
 
@@ -118,9 +138,12 @@ SEO and marketing are not offered on this site, and that includes social media m
 ## Moving it into the Laravel app
 
 1. Copy `src/` to `resources/js/smartindia/` and `public/media/` to the Laravel `public/media/`.
-2. In the Laravel project, run `npm install three lenis`.
+2. In the Laravel project, run `npm install three lenis @fontsource/familjen-grotesk @fontsource/martian-mono @fontsource/inter`.
 3. Create one Blade view per page, using the built HTML in `dist/` as the starting markup, with the same URLs as routes. Replace the stylesheet and script tags with `@vite([...])` pointing at `styles.css`, `pages.css`, and `main.js` (home) or `page.js` (inner pages).
 4. In Laravel's `vite.config.js`, set `build.target: 'es2022'`. The entry module uses top-level await.
+   - **Canonical tags:** Laravel removes trailing slashes, so in Blade use `<link rel="canonical" href="{{ url()->current() }}">` instead of the built tag, and the same address for `og:url`.
+   - **Font preload:** the `<link rel="preload">` in `head()` points into `node_modules`. In Blade, use `Vite::asset()` for it.
+   - **Server settings:** turn on gzip or brotli, and send `Cache-Control: public, max-age=31536000, immutable` for the hashed build files. GitHub Pages can't do this (its cache is fixed at 10 minutes), so these only take effect on the real host.
 5. **Forms:** this static site has no server, so the contact and booking forms open the visitor's email app, with Gmail and copy-message as fallbacks (`src/page.js`). Point them at the existing `contact/store` route so messages send directly from the page.
 6. Redirect old addresses: `/services/seo`, `/services/social-media-marketing` and `/services/meta-google-ads` to `/services/`, and `/projects/details?id=…` to the matching `/projects/<project>/`.
 7. Clarity (`xxhznt5zik`) and the Meta Pixel (`1062073803017574`) load only in production builds on `smartindia.digital` (`chrome.js`). Remove the old inline snippets from the layout so visits aren't counted twice.

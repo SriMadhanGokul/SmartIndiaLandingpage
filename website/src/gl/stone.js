@@ -7,17 +7,21 @@ import { MARK, MARK_PATHS } from '../content.js';
 const SW = 2.4, SH = 2.35, SD = .95, ROUND = .07;
 const MARK_SCALE = .72;   // mark units -> stone units on the front face
 
-function stoneMaps(S) {
+function* stoneMaps(S) {
   reseed(77);
   const hgt = new Float32Array(S * S), alb = new Float32Array(S * S);
-  for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
+  for (let y = 0; y < S; y++) {
+    for (let x = 0; x < S; x++) {
     const u = x / S, v = y / S, i = y * S + x;
     const g = fbm(u * 9, v * 9, 3.1, 5), p = fbm(u * 2.2 + 5, v * 2.2, 7.7, 3), f = fbm(u * 30, v * 30, 1.7, 2), gr = vnoise(u * 160, v * 160, 2.2);
     const edge = Math.max(Math.abs(2 * u - 1), Math.abs(2 * v - 1));
     hgt[i] = .5 + .2 * g + .1 * p + .09 * f + .05 * gr;
     alb[i] = .36 + .15 * p + .11 * g + .08 * f + .06 * gr + .14 * Math.pow(clamp((edge - .72) / .28), 2);
+    }
+    yield;
   }
   for (let k = 0; k < 230; k++) {             // sparse pock-marks: dark bowls with lighter rims
+    if (!(k & 15)) yield;
     const cx = rnd() * S, cy = rnd() * S, r = (1.5 + Math.pow(rnd(), 3) * 10) * S / 1024, r2 = r * 1.5;
     for (let y = Math.max(0, Math.floor(cy - r2)); y < Math.min(S, cy + r2); y++)
       for (let x = Math.max(0, Math.floor(cx - r2)); x < Math.min(S, cx + r2); x++) {
@@ -34,17 +38,20 @@ function stoneMaps(S) {
     return new THREE.CanvasTexture(c);
   };
   const albedo = mk(alb, [1, 1, 1]); albedo.colorSpace = THREE.SRGBColorSpace;
+  yield;
   return { albedo, bump: mk(hgt, [1, 1, 1]) };
 }
 
-export function makeStone({ tex = 1024, seg = [120, 122, 44] } = {}) {
-  const { albedo, bump } = stoneMaps(tex);
+export function* stoneSteps({ tex = 1024, seg = [120, 122, 44] } = {}) {
+  const { albedo, bump } = yield* stoneMaps(tex);
+  yield;
   const geo = new THREE.BoxGeometry(SW, SH, SD, ...seg);
   const pos = geo.attributes.position, n = pos.count;
   const ix = SW / 2 - ROUND, iy = SH / 2 - ROUND, iz = SD / 2 - ROUND;
   const base = new Float32Array(n * 3), col = new Float32Array(n * 3).fill(1);
   // position-only displacement (rounded box + chipped edges) so the duplicated edge vertices of the box faces stay welded
   for (let i = 0; i < n; i++) {
+    if (!(i & 127)) yield;
     const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
     const qx = clamp(x, -ix, ix), qy = clamp(y, -iy, iy), qz = clamp(z, -iz, iz);
     let dx = x - qx, dy = y - qy, dz = z - qz;
@@ -72,8 +79,10 @@ export function makeStone({ tex = 1024, seg = [120, 122, 44] } = {}) {
   }
 
   // weld groups: every vertex index that shares a position, so normals can be averaged across face borders
+  yield;
   const groups = new Map();
   for (let i = 0; i < n; i++) {
+    if (!(i & 1023)) yield;
     const k = `${base[i * 3].toFixed(4)},${base[i * 3 + 1].toFixed(4)},${base[i * 3 + 2].toFixed(4)}`;
     (groups.get(k) || groups.set(k, []).get(k)).push(i);
   }
@@ -89,12 +98,15 @@ export function makeStone({ tex = 1024, seg = [120, 122, 44] } = {}) {
     }
     N.needsUpdate = true;
   };
+  yield;
   nrm();
+  yield;
 
   // front-face vertices inside the mark (with a noisy, chiselled outline)
   const carve = [];
   const front = SD / 2 - .002;
   for (let i = 0; i < n; i++) {
+    if (!(i & 255)) yield;
     if (base[i * 3 + 2] < front - ROUND * .5) continue;
     const x0 = base[i * 3], y0 = base[i * 3 + 1];
     if (Math.abs(x0) > SW / 2 - ROUND * 1.2 || Math.abs(y0) > SH / 2 - ROUND * 1.2) continue;

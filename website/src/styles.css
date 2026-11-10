@@ -3,6 +3,14 @@
    centred, so the page keeps the exact composition of the approved motion design at any desktop size.
    Lite (phones, tablets, reduced motion): a stacked, touch-friendly layout built from the same content. */
 
+@import '@fontsource/familjen-grotesk/latin-400.css';
+@import '@fontsource/familjen-grotesk/latin-500.css';
+@import '@fontsource/familjen-grotesk/latin-600.css';
+@import '@fontsource/familjen-grotesk/latin-700.css';
+@import '@fontsource/martian-mono/latin-400.css';
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-500.css';
+
 :root { --u: 1; --nu: 1; --ox: 0px; --oyc: 0px; --oyb: 0px; --bg: #040508; --fg: #d8d8d8; --ink: #434343; --hot: #ff5a1f; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { background: var(--bg); }
@@ -70,7 +78,7 @@ html.full::-webkit-scrollbar { display: none; }
 
 /* ---------- loader ---------- */
 #loader { position: fixed; inset: 0; z-index: 100; background: #c9c9c9; color: #111; overflow: hidden; }
-#loader.gone { display: none; }
+#loader.gone, .lite:not(.gl) #loader { display: none; }
 .seen #loader { background: var(--bg); }
 .seen #loader > * { display: none; }
 
@@ -88,11 +96,11 @@ html.full::-webkit-scrollbar { display: none; }
 .wiped #wipe { animation: wipeOff .01s 8s forwards; }
 @keyframes wipeOff { to { visibility: hidden; } }
 @media (prefers-reduced-motion: reduce) { #wipe { display: none; } }
-#ldBox { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+#ldBox { position: absolute; left: 0; top: 0; width: 0; height: 0; }
 #ldFill { position: absolute; inset: 0; background: #d6d6d6; opacity: 0; }
 #ldFrame { position: absolute; left: 0; top: 0; overflow: visible; }
 #ldMark { position: absolute; left: 0; top: 0; width: 260px; height: 260px; transform-origin: 0 0; }
-.x { position: absolute; width: 20px; height: 20px; margin: -10px 0 0 -10px; opacity: 0; }
+.x { position: absolute; left: 0; top: 0; width: 20px; height: 20px; margin: -10px 0 0 -10px; opacity: 0; }
 .x::before, .x::after { content: ""; position: absolute; left: 9px; top: 2px; width: 1.2px; height: 16px; background: #555; }
 .x::after { transform: rotate(90deg); }
 #ldLbl { position: absolute; left: 0; width: 100%; text-align: center; color: #111; word-spacing: 6px; opacity: 0; font-size: calc(16.875px * var(--nu)); line-height: 1; }
@@ -161,6 +169,7 @@ html.full::-webkit-scrollbar { display: none; }
 #stageWrap { position: relative; }
 #stage { position: sticky; top: 0; height: 100vh; overflow: hidden; z-index: 1; }
 .lite #stageWrap { display: none; }
+html:not(.lite) #lite { display: none; }
 .layer { position: absolute; inset: 0; overflow: hidden; }
 
 /* dark: hero + about + marquee */
@@ -255,7 +264,7 @@ html.full::-webkit-scrollbar { display: none; }
 
 /* design in motion */
 #dim { z-index: 17; background: #c3c3c3; color: var(--ink); }
-.dimT { font-size: 150px; line-height: 120px; letter-spacing: -12px; white-space: nowrap; text-transform: uppercase; color: var(--ink); font-weight: 400; }
+.dimT { left: 0; font-size: 150px; line-height: 120px; letter-spacing: -12px; white-space: nowrap; text-transform: uppercase; color: var(--ink); font-weight: 400; }
 #dim svg { pointer-events: none; }
 #dimLine { height: 1px; background: rgba(0, 0, 0, .1); }
 #rib { left: 0; top: 0; width: 1920px; height: 868px; perspective: 1500px; perspective-origin: 50% 45%; pointer-events: none; }
@@ -412,7 +421,7 @@ html.full::-webkit-scrollbar { display: none; }
 #mDim { height: 540vh; height: 540lvh; }
 .m-stage { position: sticky; top: 0; height: 100vh; height: 100lvh; overflow: hidden; }
 .m-wrap + .l-testi { margin-top: -70vh; margin-top: -70lvh; z-index: 2; }
-.lite.gl #lite ~ #footer { margin-top: -70vh; margin-top: -70lvh; }
+.lite.gl #lite.built ~ #footer { margin-top: -70vh; margin-top: -70lvh; }
 #mSvcIn { background: #fff; color: #111; }
 .m-lbl { position: absolute; left: 0; right: 0; top: 13.5%; }
 .m-words { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-58%); font-size: min(calc(100vw / 6.5), 15lvh); line-height: .84; letter-spacing: -.08em; word-spacing: .1em; text-transform: uppercase; text-align: center; font-weight: 400; pointer-events: none; }
@@ -464,6 +473,9 @@ html.full::-webkit-scrollbar { display: none; }
 .lite:not(.gl) .wipe-in { position: static; height: auto; padding: 26px 0 40px; }
 .lite:not(.gl) .wipeb + .sec, .lite:not(.gl) .wipeb + .l-sec { margin-top: 0; }
 .lite:not(.gl) .slt { display: none; }
+
+/* flat layout: the browser can skip laying out sections that are far off screen */
+.lite:not(.gl) .l-sec:not(.l-hero), .lite:not(.gl) #footer { content-visibility: auto; contain-intrinsic-size: auto 900px; }
 
 /* reveal on scroll (lite) */
 .js .rv { opacity: 0; transform: translateY(26px); filter: blur(6px); transition: opacity .9s, transform 1s cubic-bezier(.2, .8, .2, 1), filter .9s; }

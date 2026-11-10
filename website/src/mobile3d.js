@@ -1,10 +1,10 @@
 // The 3D story on phones, following the reference's phone site: the fire-lit S behind the hero and About, the S flying
 // through a glass marquee, the storm with the stone falling through the glass words, the S carved into it with service
 // cards drifting past, and the ring of cards settling into a grid. Same scenes as desktop, composed for portrait.
-import { autoResize, camera, canvas, clear, governor, PX, renderer, renderLayers, resize, view } from './gl/core.js';
+import { autoResize, canvas, clear, compileScenes, giveUp3D, governor, PX, renderLayers, resize, uploadTextures, view } from './gl/core.js';
 import { GlassText } from './gl/glass.js';
 import { makeLogo } from './gl/logo.js';
-import { lightning, makeServices, makeWordFx } from './gl/services.js';
+import { buildServices, lightning, makeWordFx } from './gl/services.js';
 import { makeDim } from './dim.js';
 import { bump, clamp, eio, eout, kf, lerp, seg } from './lib/util.js';
 import { $, $$, S } from './ui.js';
@@ -31,36 +31,44 @@ export async function startMobile3D({ mqSpans, svSpans, perRep, ribCards }) {
   await nextFrame();
   const logo = makeLogo({ shardCount: 18 });
   await nextFrame();
-  const svc = makeServices();
-  await nextFrame();
   const glassMq = new GlassText(mqSpans, { family: 'Familjen Grotesk', atlasPx: 200, refr: .022, frost: 8, ghost: .55, body: .34 });
-  const glassWords = new GlassText(svSpans, { family: 'Familjen Grotesk', atlasPx: 200, refr: .026, frost: 9, ghost: .6, body: .36 });
-  let curVt = 49.7;
-  const wordFx = makeWordFx(svSpans, () => curVt);
   const dimScene = makeDim({ dim: $('#dim'), dimA: $('#dimA'), dimB: $('#dimB'), dimS: $('#dimS'), dimArc: $('#dimArc'), cards: ribCards, grid: GRID, fade: false });
 
-  let mqRep = 1000, labH = [];
+  let mqRep = 1000, labH = [], glassWords = null;
   const measure = () => {
     mqRep = mqSpans[perRep].offsetLeft - mqSpans[0].offsetLeft;
-    glassMq.measure(); glassWords.measure();
+    glassMq.measure(); glassWords?.measure();
     labH = labEls.map(e => e.offsetHeight);
   };
   measure();
   autoResize(measure);
 
-  // compile shaders and upload textures behind the loader so the first scroll never stutters
-  await Promise.all([logo.scene, ...svc.scenes, glassMq.scene, glassWords.scene].map(s => renderer.compileAsync(s, camera).catch(() => {})));
-  await nextFrame();
+  // the hero's scenes get ready behind the loader
+  await compileScenes({ screen: [glassMq.scene], captured: [logo.scene] });
+  await uploadTextures([], [glassMq.shared.uMask.value, glassMq.shared.uBlur.value]);
   glassMq.layout(1); glassMq.update(0, {}); logo.update(9, 18.85, 0); renderLayers(logo.scene, [glassMq.scene]);
-  await nextFrame();
-  glassWords.layout(1); glassWords.update(0, {}); svc.render(56, 0, { on: 1, flash: .5, overlays: [glassWords.scene] });
   clear();
+
+  // The storm is built after that, a little per frame while the visitor reads the hero. The services stage holds on
+  // its white panel if they get there first.
+  let svc = null, curVt = 49.7, wordFx = null, stormStarted = false;
+  const buildStorm = async () => {
+    const built = await buildServices();
+    await nextFrame();
+    const words = new GlassText(svSpans, { family: 'Familjen Grotesk', atlasPx: 200, refr: .026, frost: 9, ghost: .6, body: .36 });
+    wordFx = makeWordFx(svSpans, () => curVt);
+    await nextFrame();
+    await compileScenes({ screen: [built.scenes[1], words.scene], captured: [built.scenes[0]] });
+    await uploadTextures(built.scenes, [words.shared.uMask.value, words.shared.uBlur.value]);
+    glassWords = words; svc = built;
+  };
 
   let glOn = true;
   return {
     frame(now, T, dt, y) {
       const H = view.h;
       let drew = false;
+      if (!stormStarted && (T > 8.6 || y > 40)) { stormStarted = true; buildStorm().catch(err => { console.error(err); giveUp3D(); }); }
 
       /* ---------- the S: hero → About → through the glass marquee ---------- */
       const rm = mq.getBoundingClientRect();
@@ -73,13 +81,12 @@ export async function startMobile3D({ mqSpans, svSpans, perRep, ribCards }) {
         S(mqRow, 'transform', `translate3d(${(-((40 + 30 * T + .25 * y) % mqRep)).toFixed(2)}px,0,0)`);
         const fl = bump(T, 5.6, 7.75, .3);
         S(flare, 'opacity', fl.toFixed(3));
-        if (fl > 0) S(flare, 'left', `${lerp(88, 68, seg(T, 5.6, 7.75)).toFixed(1)}%`);
+        if (fl > 0) S(flare, 'transform', `translateX(${(-20 * seg(T, 5.6, 7.75)).toFixed(1)}vw)`);
         if (T > 5.3 && pinned < .998) {
           logo.update(T, vtS, y, { x: 960, y: 500, s: 1.55, xk: .5, from: { x: 960, y: (40 - view.oy) / view.u, s: 36 / (MARK_H * PX(-1)) } });
           const mqOn = rm.top < H;
-          glassMq.scene.visible = mqOn;
-          if (mqOn) { glassMq.layout(1); glassMq.update(T, { opacity: 1 }); renderLayers(logo.scene, [glassMq.scene]); }
-          else renderer.render(logo.scene, camera);
+          if (mqOn) { glassMq.layout(1); glassMq.update(T, { opacity: 1 }); }
+          renderLayers(logo.scene, mqOn ? [glassMq.scene] : []);
           drew = true;
         }
       }
@@ -87,7 +94,7 @@ export async function startMobile3D({ mqSpans, svSpans, perRep, ribCards }) {
       /* ---------- services: white panel → night and storm → the stone → carving → cards drift over it ---------- */
       const rs = svcWrap.getBoundingClientRect();
       if (rs.top < H && rs.bottom > 0) {
-        const p = clamp(-rs.top / Math.max(1, rs.height - H)), vt = kf(p, SVC_KEYS, x => x);
+        const p = clamp(-rs.top / Math.max(1, rs.height - H)), vt = svc ? kf(p, SVC_KEYS, x => x) : Math.min(kf(p, SVC_KEYS, x => x), 50.2);
         curVt = vt;
         const gv = Math.round(lerp(255, 200, seg(vt, 49.9, 50.6)));
         S(stage, 'background', `rgba(${gv},${gv},${gv},${(1 - seg(vt, 50.5, 51.3)).toFixed(3)})`);
@@ -106,7 +113,7 @@ export async function startMobile3D({ mqSpans, svSpans, perRep, ribCards }) {
         });
         slats(svcSlats, p, .88, .022, .03);
         svcWrap.dataset.theme = p > .975 || vt < 50.6 ? 'light' : 'dark';
-        if (vt > 50.2 && p < .998) {
+        if (svc && vt > 50.2 && p < .998) {
           const on = seg(vt, 50.4, 51.4), flash = on > .5 ? lightning(T) : 0;
           glassWords.layout(1);
           glassWords.update(T, { opacity: seg(vt, 51.15, 51.5), flash, fx: wordFx });
@@ -131,7 +138,7 @@ export async function startMobile3D({ mqSpans, svSpans, perRep, ribCards }) {
       const under = r => r.top <= 44 && r.bottom > 44;
       nav.classList.toggle('bare', (under(rs) && rs.bottom > H * .3) || (under(rd) && rd.bottom > H * .3));
 
-      governor(drew ? now : 0);
+      governor(drew && (svc || !stormStarted) ? now : 0);    // frames are slower while the storm is being built: that doesn't count
       if (!drew && glOn) clear();
       glOn = drew;
       S(canvas, 'visibility', drew ? 'visible' : 'hidden');

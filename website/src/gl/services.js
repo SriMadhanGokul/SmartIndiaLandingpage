@@ -3,9 +3,9 @@
 // run on real time so the storm stays alive while the visitor pauses.
 import * as THREE from 'three';
 import { backdrop, PX, renderLayers, ref, toWorld, view } from './core.js';
-import { seg, eio, curve, rnd, reseed } from '../lib/util.js';
-import { makeStone } from './stone.js';
-import { makeStorm, flashAt } from './storm.js';
+import { seg, eio, curve, rnd, reseed, runSliced, runSync } from '../lib/util.js';
+import { stoneSteps } from './stone.js';
+import { stormSteps, flashAt } from './storm.js';
 
 const KT = [50.85, 51.6, 52.6, 54.6, 56.4, 57.6, 58.4, 59.1, 59.6, 60.6, 61.4];
 const K = vals => curve(KT.map((t, i) => [t, vals[i]]));
@@ -37,7 +37,7 @@ export function makeWordFx(spans, getVt) {
   };
 }
 
-export function makeServices() {
+function* servicesSteps() {
   const back = new THREE.Scene(), front = new THREE.Scene();
   const bgU = { uFlash: { value: 0 } };
   back.add(backdrop(`uniform float uFlash;
@@ -52,7 +52,7 @@ export function makeServices() {
   const fill = new THREE.DirectionalLight(0xffffff, .45); fill.position.set(4, -3, 8); back.add(fill);
   const flashL = new THREE.DirectionalLight(0xdfe8ff, 0); flashL.position.set(1, 9, 2); back.add(flashL);
 
-  const stone = makeStone(view.lite ? { tex: 512, seg: [84, 86, 22] } : undefined);
+  const stone = yield* stoneSteps(view.lite ? { tex: 512, seg: [84, 86, 22] } : undefined);
   back.add(stone.mesh);
 
   reseed(91);
@@ -61,8 +61,9 @@ export function makeServices() {
   const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(dpos, 3));
   const dmat = new THREE.PointsMaterial({ color: 0xcfcac2, size: .03, transparent: true, depthWrite: false });
   const dust = new THREE.Points(dg, dmat); dust.frustumCulled = false; back.add(dust);
+  yield;
 
-  const storm = makeStorm(back, front, view.lite ? { tex: 256, nBack: 14, nFront: 4, spread: .42 } : undefined);
+  const storm = yield* stormSteps(back, front, view.lite ? { tex: 256, nBack: 14, nFront: 4, spread: .42 } : undefined);
 
   return {
     scenes: [back, front],
@@ -89,3 +90,6 @@ export function makeServices() {
     },
   };
 }
+
+export const makeServices = () => runSync(servicesSteps());     // all at once, behind the desktop loader
+export const buildServices = () => runSliced(servicesSteps());  // a little per frame, while a phone shows the hero

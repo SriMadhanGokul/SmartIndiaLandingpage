@@ -6,7 +6,7 @@
 // Real time drives the loader, the hero intro and idle loop, the fire, the storm and the trigger animations.
 import { clamp, lerp, seg, eio, eout, bump, curve, reseed } from './lib/util.js';
 import { HERO, ABOUT, MARQUEE, FACTS, CLIENTS, SERVICES_WORDS, RIBBON } from './content.js';
-import { view, resize as glResize, renderer, camera, renderLayers, clear, canvas } from './gl/core.js';
+import { view, resize as glResize, compileScenes, renderLayers, clear, canvas } from './gl/core.js';
 import { GlassText } from './gl/glass.js';
 import { makeLogo } from './gl/logo.js';
 import { makeServices, makeWordFx, lightning } from './gl/services.js';
@@ -33,6 +33,7 @@ export async function start({ lenis, chrome, clock, loader, seen, takeOver }) {
   const el = Object.fromEntries(['dark', 'light', 'svc', 'svText', 'trans', 'dim', 'darkPage', 'lightPage', 'trPage', 'wtrack', 'mq', 'flare',
     'svWrap', 'b1a', 'b1b', 'dimA', 'dimB', 'dimS', 'dimLine', 'dimArc', 'stageWrap', 'sbar', 'sthumb'].map(id => [id, $('#' + id)]));
   const navMark = $('#navMark');
+  $('#lite').remove();      // the phone layout's markup isn't used here
 
   /* ---------- DOM: hero, about, marquee ---------- */
   reseed(11);
@@ -145,7 +146,7 @@ export async function start({ lenis, chrome, clock, loader, seen, takeOver }) {
   const wordFx = makeWordFx(svSpans, () => curVt);
 
   // compile shaders and upload textures behind the loader so the first scroll never stutters
-  await Promise.all([logo.scene, ...svc.scenes, glassMq.scene, glassWords.scene].map(s => renderer.compileAsync(s, camera).catch(() => {})));
+  await compileScenes({ screen: [logo.scene, ...svc.scenes, glassMq.scene, glassWords.scene], captured: [logo.scene, svc.scenes[0]] });
   await nextFrame();
   glassMq.layout(view.u); glassMq.update(0, {}); logo.update(9, HOLD, 0); renderLayers(logo.scene, [glassMq.scene]);
   await nextFrame();
@@ -186,7 +187,7 @@ export async function start({ lenis, chrome, clock, loader, seen, takeOver }) {
       S(el.mq, 'transform', `translate3d(${(-((60 + 52 * T + .35 * dS / u) % mqRep)).toFixed(2)}px,0,0)`);
       const fl = bump(T, 5.6, 7.75, .3);
       S(el.flare, 'opacity', fl.toFixed(3));
-      S(el.flare, 'left', `${lerp(1620, 1350, seg(T, 5.6, 7.75)).toFixed(1)}px`); S(el.flare, 'top', '120px');
+      S(el.flare, 'transform', `translateX(${(-270 * seg(T, 5.6, 7.75)).toFixed(1)}px)`);
     }
 
     /* light page */

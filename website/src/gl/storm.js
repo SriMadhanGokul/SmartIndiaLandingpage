@@ -2,7 +2,7 @@
 // reference's veiling smoke), lightning flashes timed from the reference's brightness spikes, and
 // branching electric bolts + sparks on the strongest strikes.
 import * as THREE from 'three';
-import { fbm, clamp, rnd, reseed, lerp } from '../lib/util.js';
+import { fbm, clamp, rnd, reseed } from '../lib/util.js';
 
 // [start, duration, strength] — measured luminance spikes of the reference's storm (51–67s)
 export const FLASHES = [[51.72, .12, .8], [52.48, .1, .5], [53.46, .17, .9], [54.52, .08, .45], [55.56, .13, .6], [55.9, .16, 1],
@@ -21,10 +21,11 @@ export function flashAt(t) {
   return f;
 }
 
-function cloudTexture(sd, S) {
+function* cloudTexture(sd, S) {
   const c = document.createElement('canvas'); c.width = c.height = S;
   const g = c.getContext('2d'), im = g.createImageData(S, S);
-  for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
+  for (let y = 0; y < S; y++) {
+    for (let x = 0; x < S; x++) {
     const u = x / S, v = y / S, r = Math.hypot(u - .5, v - .5) * 2;
     const warp = fbm(u * 2.2 + sd, v * 2.2, sd, 2);
     const big = fbm(u * 2.6 + warp * .45 + sd * 2, v * 2.6 + warp * .45, sd * .5, 3) * .5 + .5;
@@ -33,6 +34,8 @@ function cloudTexture(sd, S) {
     const shade = .45 + .55 * clamp(.8 - v * .75 + (nz - .5) * 1.6);   // lit tops, darker bellies
     const i = (y * S + x) * 4;
     im.data[i] = im.data[i + 1] = im.data[i + 2] = shade * 255; im.data[i + 3] = d * 255;
+    }
+    yield;
   }
   g.putImageData(im, 0, 0);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
@@ -73,9 +76,9 @@ function boltGeometry(x0, y0, len, sd) {
   return { core: ribbon(1), glow: ribbon(9), tips };
 }
 
-export function makeStorm(backScene, frontScene, { tex = 384, nBack = 24, nFront = 8, spread = 1 } = {}) {
+export function* stormSteps(backScene, frontScene, { tex = 384, nBack = 24, nFront = 8, spread = 1 } = {}) {
   reseed(301);
-  const texs = [cloudTexture(1.3, tex), cloudTexture(4.7, tex), cloudTexture(9.1, tex)];
+  const texs = [yield* cloudTexture(1.3, tex), yield* cloudTexture(4.7, tex), yield* cloudTexture(9.1, tex)];
   const mkCloud = (scene, z, s, op, i) => {
     const m = new THREE.SpriteMaterial({ map: texs[i % 3], transparent: true, depthWrite: false, opacity: op });
     const sp = new THREE.Sprite(m);
@@ -89,8 +92,9 @@ export function makeStorm(backScene, frontScene, { tex = 384, nBack = 24, nFront
 
   // bolts tied to the strongest strikes
   const bolts = [];
-  FLASHES.forEach(([t0, d, s], k) => {
-    if (s < .85) return;
+  for (const [k, [t0, d, s]] of FLASHES.entries()) {
+    if (s < .85) continue;
+    yield;
     const side = k % 2 ? 1 : -1, x0 = side * (7 + rnd() * 6) * spread, y0 = 5.5 + rnd() * 2;
     const { core, glow, tips } = boltGeometry(x0, y0, 7 + rnd() * 5, 500 + k * 17);
     const cm = new THREE.MeshBasicMaterial({ color: 0xe8f0ff, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
@@ -103,7 +107,7 @@ export function makeStorm(backScene, frontScene, { tex = 384, nBack = 24, nFront
     grp.traverse(o => { o.frustumCulled = false; o.renderOrder = -50; });
     backScene.add(grp);
     bolts.push({ grp, t0, d, cm, gm, sparks, tips });
-  });
+  }
 
   return {
     update(t, { on, flash, darkness, drift = t }) {   // drift: continuous clock for cloud motion (t may loop)

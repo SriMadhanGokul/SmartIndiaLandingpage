@@ -1,8 +1,5 @@
 // Every inner page of the site. Each route renders to real, static HTML at build time.
-import {
-  ABOUT, BLOG, BRAND, CONTACT, CTA, FACTS, FAQ, HERO, ICON, INDUSTRIES, PLANS, POINTS, PROJECTS, RATINGS, SERVICES, STEPS,
-  TAGLINE, TEAM, TESTIMONIALS, VALUES,
-} from '../src/data.js';
+import { ABOUT, BLOG, BRAND, CONTACT, CTA, FACTS, FAQ, HERO, ICON, INDUSTRIES, PLANS, POINTS, PROJECTS, RATINGS, SERVICES, STEPS, TAGLINE, TEAM, TESTIMONIALS, VALUES, SEO } from '../src/data.js';
 import { esc, roll, shell } from './layout.js';
 
 /* ---------- shared pieces ---------- */
@@ -79,7 +76,7 @@ const about = L => hero(L, {
         <div class="box2 pbox rv"><div class="cap13">${HERO.est}</div><div class="cap13">${HERO.years}</div></div>
         ${btn(L('services/'), 'Our services', 'rv')}
       </div>
-      <img class="ab-img rv" src="/media/about-1-2.jpg" alt="The SMARTINDIA.DIGITAL team at work" loading="lazy">
+      <img class="ab-img rv" src="/media/about-1-2.webp" alt="The SMARTINDIA.DIGITAL team at work" loading="lazy">
     </div>
   </div>
 </div>`) + wipe(['INNOVATE', 'IMPACT', 'INSPIRE']) + sec('light', `<div class="center">
@@ -135,7 +132,7 @@ const service = (L, s, i) => {
       </div>
     </aside>
     <div class="sd-main">
-      <img class="sd-img rv" src="/media/service-details.jpg" alt="" loading="lazy">
+      <img class="sd-img rv" src="/media/service-details.webp" alt="" loading="lazy">
       <h2 class="t3 rv">${esc(s.overviewTitle)}</h2>
       ${s.overview.map(p => `<p class="tx rv">${esc(p)}</p>`).join('')}
       <h2 class="t3 rv">${esc(s.listTitle)}</h2>
@@ -328,30 +325,30 @@ const notFound = L => `<section class="ph ph-404" data-theme="dark">
 
 /* ---------- route table ---------- */
 export const routes = {
-  'about/': { title: 'About Us', active: 'about/', id: 'about', desc: 'SMARTINDIA.DIGITAL is a creative digital agency in Tirupur. We build digital experiences that grow your business.', body: about },
-  'services/': { title: 'Services', active: 'services/', id: 'services', desc: 'Mobile application development, web application development, website development and graphic designing.', body: services },
-  'projects/': { title: 'Projects & Clients', active: 'projects/', id: 'projects', desc: 'Websites, online stores and mobile applications built by SMARTINDIA.DIGITAL for our clients.', body: projects },
-  'team/': { title: 'Our Team', active: 'team/', id: 'team', desc: 'Meet the experienced team behind SMARTINDIA.DIGITAL.', body: team },
-  'pricing/': { title: 'Pricing', active: 'pricing/', id: 'pricing', desc: 'Project-based pricing, monthly retainer plans, and support and maintenance packages.', body: pricing },
-  'testimonials/': { title: 'Testimonials', active: 'testimonials/', id: 'testimonials', desc: 'What our clients say about working with SMARTINDIA.DIGITAL.', body: testimonials },
-  'faq/': { title: 'FAQ', active: 'faq/', id: 'faq', desc: 'Answers to common questions about our services, process, pricing and support.', body: faq },
-  'blogs/': { title: 'News', active: 'blogs/', id: 'blogs', desc: 'Thoughts from our team on building mobile and web applications.', body: blogs },
-  'book-a-call/': { title: 'Book a Free Call', active: 'contact/', id: 'book', desc: `Book a free call with SMARTINDIA.DIGITAL. Call ${CONTACT.phone} or tell us when suits you and we will call you.`, body: bookCall },
-  'contact/': { title: 'Contact Us', active: 'contact/', id: 'contact', desc: `Contact SMARTINDIA.DIGITAL in Tirupur. Call ${CONTACT.phone} or email ${CONTACT.email}.`, body: contact },
+  'about/': { ...SEO['about/'], active: 'about/', id: 'about', body: about },
+  'services/': { ...SEO['services/'], active: 'services/', id: 'services', body: services },
+  'projects/': { ...SEO['projects/'], active: 'projects/', id: 'projects', body: projects },
+  'team/': { ...SEO['team/'], active: 'team/', id: 'team', body: team },
+  'pricing/': { ...SEO['pricing/'], active: 'pricing/', id: 'pricing', body: pricing },
+  'testimonials/': { ...SEO['testimonials/'], active: 'testimonials/', id: 'testimonials', body: testimonials },
+  'faq/': { ...SEO['faq/'], active: 'faq/', id: 'faq', body: faq },
+  'blogs/': { ...SEO['blogs/'], active: 'blogs/', id: 'blogs', body: blogs },
+  'book-a-call/': { ...SEO['book-a-call/'], active: 'contact/', id: 'book', body: bookCall },
+  'contact/': { ...SEO['contact/'], active: 'contact/', id: 'contact', body: contact },
 };
 SERVICES.forEach((s, i) => {
-  routes[`services/${s.slug}/`] = { title: s.title, active: 'services/', id: 'service', desc: s.short.replace(/’/g, '\''), body: L => service(L, s, i) };
+  routes[`services/${s.slug}/`] = { ...SEO.services[s.slug], active: 'services/', id: 'service', body: L => service(L, s, i) };
 });
 PROJECTS.forEach((p, i) => {
-  routes[`projects/${p.slug}/`] = { title: p.name, active: 'projects/', id: 'project', desc: p.text, body: L => project(L, p, i) };
+  routes[`projects/${p.slug}/`] = { ...SEO.project(p), active: 'projects/', id: 'project', body: L => project(L, p, i) };
 });
 BLOG.forEach(b => {
-  routes[`blogs/${b.slug}/`] = { title: b.title, active: 'blogs/', id: 'post', desc: b.excerpt, body: L => post(L, b) };
+  routes[`blogs/${b.slug}/`] = { title: b.seoTitle || b.title, active: 'blogs/', id: 'post', desc: b.excerpt, body: L => post(L, b) };
 });
 export const NOT_FOUND = { title: 'Page not found', active: '', id: 'notfound', desc: 'This page could not be found.', body: notFound };
 
 export const renderRoute = (route, base) => {
   const r = route === '404' ? NOT_FOUND : routes[route];
   const L = p => `${base}${p}`;
-  return shell({ base, title: r.title, desc: r.desc, path: route === '404' ? '' : route, active: r.active, id: r.id, body: r.body(L) });
+  return shell({ base, title: r.title, desc: r.desc, path: route === '404' ? '' : route, index: route !== '404', active: r.active, id: r.id, body: r.body(L) });
 };

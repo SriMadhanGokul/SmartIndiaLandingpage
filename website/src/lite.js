@@ -57,12 +57,11 @@ const dim2D = () => `<section class="l-sec l-dim" aria-label="Design in motion" 
 export async function start({ lenis, chrome, clock, loader, reduce, takeOver }) {
   const gl = document.documentElement.classList.contains('gl');
   const L = $('#lite');
-  L.hidden = false;
   $('#stageWrap')?.remove();     // the desktop stage is not used here (the phone stages reuse some of its ids)
   L.innerHTML = `
   <section class="l-sec l-hero" aria-label="Introduction" data-theme="dark">
     ${gl ? '<div class="m-flare" id="mFlare"></div>' : `<div class="l-mark">${markArt()}</div>`}
-    <h1 class="l-h1 rv" aria-label="Designed to grow your business"><span aria-hidden="true">${HERO.line1}<br>${HERO.fixed}<span class="l-word" id="lWord"></span></span></h1>
+    <h1 class="l-h1${gl ? ' rv' : ''}" aria-label="Designed to grow your business"><span aria-hidden="true">${HERO.line1}<br>${HERO.fixed}<span class="l-word" id="lWord"></span></span></h1>
     <div class="l-btns rv"><a class="btn roll" href="${href(CTA.discuss)}"><span data-t="Discuss your project"></span><b>→</b></a><a class="btn roll" href="${href(CTA.call)}"><span data-t="Book a free call"></span><b>→</b></a></div>
     <div class="l-meta rv">
       <div class="box2"><div class="c1"><span class="cap13">${HERO.est}</span></div><div class="cap13">${HERO.years}</div></div>
@@ -98,6 +97,7 @@ export async function start({ lenis, chrome, clock, loader, reduce, takeOver }) 
   <section class="l-sec l-testi" aria-label="Client testimonials" id="lTesti" data-theme="light"></section>
   ${gl ? dim3D() : dim2D()}`;
 
+  L.classList.add('built');
   mountTestimonials($('#lTesti'), false);
   let ribCards = [];
   if (gl) ribCards = RIBBON.map(r => $('#ribIn').appendChild(ribbonCard(r)));
@@ -163,7 +163,7 @@ export async function start({ lenis, chrome, clock, loader, reduce, takeOver }) 
   takeOver();
   clock.ready = true;
   let revealed = false, first = true;
-  if (reduce) { loader.skip(); startReveals(); revealed = true; }
+  if (!gl) { loader.skip(); startReveals(); revealed = true; }
 
   const frame = now => {
     lenis.raf(now);

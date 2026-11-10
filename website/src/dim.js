@@ -18,8 +18,8 @@ export function makeDim({ dim, dimA, dimB, dimS, dimLine, dimArc, cards, grid, f
       if (fade) S(dim, 'opacity', seg(vt, 67.95, 68.1).toFixed(3));
       const lt = clock.step(vt >= 67.96, dt);
       letterIn(AL, lt, .05, .35, .4); letterIn(BL, lt, .1, .35, .4);
-      S(dimA, 'left', `${kf(vt, [[67.95, 60], [68.4, 168], [69.0, 466], [72, 1365], [74, 1965]], x => x).toFixed(1)}px`);
-      S(dimB, 'left', `${kf(vt, [[67.95, 1290], [68.4, 1200], [69.0, 912], [72, 45], [74, -535]], x => x).toFixed(1)}px`);
+      S(dimA, 'transform', `translateX(${kf(vt, [[67.95, 60], [68.4, 168], [69.0, 466], [72, 1365], [74, 1965]], x => x).toFixed(1)}px)`);
+      S(dimB, 'transform', `translateX(${kf(vt, [[67.95, 1290], [68.4, 1200], [69.0, 912], [72, 45], [74, -535]], x => x).toFixed(1)}px)`);
       const tx = (1 - seg(vt, 73, 74.2)).toFixed(3);
       S(dimA, 'opacity', tx); S(dimB, 'opacity', tx); S(dimS, 'opacity', tx);
       if (dimLine) S(dimLine, 'opacity', seg(vt, 74.4, 75.2).toFixed(3));

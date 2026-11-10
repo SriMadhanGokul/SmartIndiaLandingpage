@@ -2,6 +2,7 @@
 // In dev it serves them through Vite's HTML pipeline, so they behave exactly like files on disk.
 import path from 'node:path';
 import { renderRoute, routes } from './pages.js';
+import { HERO } from '../src/data.js';
 import { HOME_META, footer, head, header, menu } from './layout.js';
 
 const slash = p => p.replace(/\\/g, '/');
@@ -25,6 +26,7 @@ export function sitePages(root) {
     .replace('<!--site:header-->', header(base))
     .replace('<!--site:menu-->', menu(base, ''))
     .replace('<!--site:footer-->', footer(base))
+    .replace('<!--site:h1-->', `${HERO.line1}<br>${HERO.fixed}<span class="l-word">${HERO.words[0]}</span>`)
     .replace(/"~\//g, `"${base}`);
 
   return {

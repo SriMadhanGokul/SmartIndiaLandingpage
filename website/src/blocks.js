@@ -56,7 +56,7 @@ const TYPE_CARDS = {
 export function ribbonCard(r) {
   const d = document.createElement('div');
   if (r.startsWith('T:')) { d.className = 'rc'; d.innerHTML = TYPE_CARDS[r.slice(2)] || ''; }
-  else { d.className = r.endsWith('.png') ? 'rc png' : 'rc'; d.innerHTML = `<img src="${MEDIA}${r}" alt="" loading="lazy">`; }
+  else { d.className = r.startsWith('object') ? 'rc png' : 'rc'; d.innerHTML = `<img src="${MEDIA}${r}" alt="" loading="lazy">`; }
   return d;
 }
 
